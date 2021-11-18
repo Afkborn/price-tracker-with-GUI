@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>UrunlerWindow</class>
+ <widget class="QMainWindow" name="UrunlerWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>400</height>
+   </rect>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>800</width>
+    <height>400</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Ürünler Listesi</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QListWidget" name="product_list_widget">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>10</y>
+      <width>780</width>
+      <height>300</height>
+     </rect>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>780</width>
+      <height>300</height>
+     </size>
+    </property>
+   </widget>
+   <widget class="QWidget" name="horizontalLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>320</y>
+      <width>781</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QPushButton" name="detay_button">
+       <property name="text">
+        <string>Detaylar</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="web_start_button">
+       <property name="text">
+        <string>Web'de aç</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>Dosya</string>
+    </property>
+    <addaction name="actionYeni_Urun"/>
+   </widget>
+   <widget class="QMenu" name="menuTercihler">
+    <property name="title">
+     <string>Tercihler</string>
+    </property>
+    <addaction name="actionAyarlar"/>
+    <addaction name="actionCikis"/>
+    <addaction name="separator"/>
+    <addaction name="actionHakkimda"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuTercihler"/>
+  </widget>
+  <action name="actionAyarlar">
+   <property name="text">
+    <string>Ayarlar</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+A</string>
+   </property>
+  </action>
+  <action name="actionCikis">
+   <property name="text">
+    <string>Çıkış</string>
+   </property>
+  </action>
+  <action name="actionHakkimda">
+   <property name="text">
+    <string>Hakımda</string>
+   </property>
+  </action>
+  <action name="actionYeni_Urun">
+   <property name="text">
+    <string>Yeni Ürün</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+Y</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
