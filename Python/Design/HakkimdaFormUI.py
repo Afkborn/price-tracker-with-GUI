@@ -14,8 +14,25 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_HakkimdaForm(object):
     def setupUi(self, HakkimdaForm):
         HakkimdaForm.setObjectName("HakkimdaForm")
-        HakkimdaForm.resize(400, 200)
+        HakkimdaForm.resize(390, 188)
         HakkimdaForm.setMaximumSize(QtCore.QSize(400, 200))
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        HakkimdaForm.setFont(font)
+        self.gridLayoutWidget = QtWidgets.QWidget(HakkimdaForm)
+        self.gridLayoutWidget.setGeometry(QtCore.QRect(10, 10, 371, 171))
+        self.gridLayoutWidget.setObjectName("gridLayoutWidget")
+        self.gridLayout = QtWidgets.QGridLayout(self.gridLayoutWidget)
+        self.gridLayout.setContentsMargins(0, 0, 0, 0)
+        self.gridLayout.setObjectName("gridLayout")
+        self.label = QtWidgets.QLabel(self.gridLayoutWidget)
+        font = QtGui.QFont()
+        font.setBold(False)
+        font.setWeight(50)
+        self.label.setFont(font)
+        self.label.setAlignment(QtCore.Qt.AlignCenter)
+        self.label.setObjectName("label")
+        self.gridLayout.addWidget(self.label, 0, 0, 1, 1)
 
         self.retranslateUi(HakkimdaForm)
         QtCore.QMetaObject.connectSlotsByName(HakkimdaForm)
@@ -23,3 +40,4 @@ class Ui_HakkimdaForm(object):
     def retranslateUi(self, HakkimdaForm):
         _translate = QtCore.QCoreApplication.translate
         HakkimdaForm.setWindowTitle(_translate("HakkimdaForm", "Hakkımda"))
+        self.label.setText(_translate("HakkimdaForm", "<html><head/><body><p align=\"center\"><span style=\" font-size:12pt; font-weight:600;\">Bilgehan Kalay</span></p><p align=\"center\"><span style=\" font-size:12pt;\">Github: Afkborn</span></p><p align=\"center\"><span style=\" font-size:12pt;\">Python 3.8.8</span></p></body></html>"))
