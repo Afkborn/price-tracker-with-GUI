@@ -85,8 +85,8 @@ class Ui_UrunEkleForm(object):
     def retranslateUi(self, UrunEkleForm):
         _translate = QtCore.QCoreApplication.translate
         UrunEkleForm.setWindowTitle(_translate("UrunEkleForm", "Ürün Ekle"))
-        self.label.setText(_translate("UrunEkleForm", "Ürün ismi: "))
-        self.label_2.setText(_translate("UrunEkleForm", "URL: "))
+        self.label.setText(_translate("UrunEkleForm", "İsim"))
+        self.label_2.setText(_translate("UrunEkleForm", "URL"))
         self.urun_fiyat_takip_cb.setText(_translate("UrunEkleForm", "Fiyat Takip Et"))
         self.label_3.setText(_translate("UrunEkleForm", "Kontrol Süresi"))
         self.urun_stok_takip_cb.setText(_translate("UrunEkleForm", "Stok Takip Et"))

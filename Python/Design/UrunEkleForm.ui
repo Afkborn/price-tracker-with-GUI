@@ -42,7 +42,7 @@
        </font>
       </property>
       <property name="text">
-       <string>Ürün ismi: </string>
+       <string>İsim</string>
       </property>
      </widget>
     </item>
@@ -63,7 +63,7 @@
        </font>
       </property>
       <property name="text">
-       <string>URL: </string>
+       <string>URL</string>
       </property>
      </widget>
     </item>

@@ -35,10 +35,11 @@ class MainWindow(QtWidgets.QMainWindow, Ui_UrunlerWindow):
         self.actionHakkimda.triggered.connect(self.showAboutWindow)
         self.actionYeni_Urun.triggered.connect(self.showNewProductWindow)
 
-        myProduct = Product("Bilgehan")
+        myProduct = Product(id=1,isim="aaa",link="https://market.samm.com/raspberry-pi-zero-2-w",check_time_sec=600,fiyat_takip=True,stok_takip=True,fiyat=18.99,stok=True,son_kontrol_zamani=None,domain="market.samm.com")
         self.detay_button.clicked.connect(lambda: self.showProductDetailWindowWithProduct(myProduct))
         
 
+        
 
     def showSettingsWindow(self):
         self.ayarlarForm.show()
@@ -51,6 +52,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_UrunlerWindow):
     def showProductDetailWindowWithProduct(self,product:Product):
         self.urunDetayForm.show()
         self.urunDetayForm.setProduct(product)
+        self.urunDetayForm.loadProduct()
+
 
 
 

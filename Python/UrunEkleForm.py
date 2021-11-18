@@ -33,4 +33,8 @@ class UrunEkleForm(QtWidgets.QMainWindow,Ui_UrunEkleForm):
         self.urun_domain_edit.setText(self.getDomainFromURL(self.urun_url_edit.text()))
         myProduct = Product(isim=urun_isim,link=urun_url,check_time_sec=kontrol_time_sec,fiyat_takip=urun_fiyat_takip,stok_takip=urun_stok_takip,domain=urun_domain)
         print(myProduct)
+        #TODO ürün verilerini internetten kontrol et
+        #TODO ürünün veritabanına kaydedilmesi
+        #TODO ürün ekleme formu kapansın
+        #TODO ürünler listesine yeni ürünü ekle
 

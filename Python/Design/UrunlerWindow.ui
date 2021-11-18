@@ -20,22 +20,6 @@
    <string>Ürünler Listesi</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QListWidget" name="product_list_widget">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>10</y>
-      <width>780</width>
-      <height>300</height>
-     </rect>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>780</width>
-      <height>300</height>
-     </size>
-    </property>
-   </widget>
    <widget class="QWidget" name="horizontalLayoutWidget">
     <property name="geometry">
      <rect>
@@ -61,6 +45,16 @@
       </widget>
      </item>
     </layout>
+   </widget>
+   <widget class="QListView" name="product_list_widget">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>10</y>
+      <width>780</width>
+      <height>300</height>
+     </rect>
+    </property>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
