@@ -1,4 +1,5 @@
 SUPPORTEDWEBSITES = ["market.samm.com"]
+
 from typing import SupportsRound
 from Python.Model.Product import Product
 

@@ -15,6 +15,8 @@ from PyQt5 import QtWidgets
 
 #Business
 from Python.Business.DatabaseProduct import DatabaseProduct
+from Python.Business.Chart import Chart
+
 
 #UI
 from Python.Design.UrunDetayFormUI import Ui_UrunDetayForm
@@ -129,7 +131,8 @@ class UrunDetayForm(QtWidgets.QMainWindow, Ui_UrunDetayForm):
         self.URUN_GUNCELLENDI_MI = True
 
     def show_product_price_chart(self):
-        pass
+        myChart = Chart(self.product)
+        myChart.create_plot()
 
 
 

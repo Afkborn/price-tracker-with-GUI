@@ -131,7 +131,7 @@ class DatabaseProduct:
         """Product Classından bir obje alır ve bu obje için database üzerinde fiyat listesinin tablosunu oluşturur. """
         self.db = sql.connect(self.__dbLoc)
         self.im = self.db.cursor()
-        tableName = f"price_{product.getId()}"
+        tableName = f"prices{product.get_id()}"
         create_table_prices = f"""CREATE TABLE IF NOT EXISTS {tableName} (time INTEGER NOT NULL, price INTEGER NOT NULL)"""
         self.im.execute(create_table_prices)
         self.db.commit()
@@ -157,7 +157,7 @@ class DatabaseProduct:
         """
         self.im.execute(f"INSERT INTO products({KEY}) VALUES({VALUES})")
         product.set_id(self.im.lastrowid)
-        
+
         self.db.commit()
         self.db.close()
 
@@ -167,19 +167,22 @@ class DatabaseProduct:
         #create table for product prices
 
     def add_price_priceList(self,product:Product):
+        try:
+            self.db = sql.connect(self.__dbLoc)
+            self.im = self.db.cursor()
+            tableName = f"prices{product.get_id()}"
+            KEY = f"time,price"
+            VALUES = f"'{product.get_son_kontrol_zamani()}','{product.get_fiyat()}'"
+            sql_command = f"INSERT INTO {tableName}({KEY}) VALUES({VALUES})"
+            self.im.execute(sql_command)
+            self.db.commit()
+            self.db.close()
+        except Exception as e:
+            print(e)
+            self.create_price_list_for_product(product)
+            self.add_price_priceList(product)
 
-        self.db = sql.connect(self.__dbLoc)
-        self.im = self.db.cursor()
 
-        tableName = f"prices{product.get_id()}"
-        KEY = f"time,price"
-        VALUES = f"'{product.get_son_kontrol_zamani()}','{product.get_fiyat()}'"
-
-        sql_command = f"INSERT INTO {tableName}({KEY}) VALUES({VALUES})"
-
-        self.im.execute(sql_command)
-        self.db.commit()
-        self.db.close()
 
 
     def updatePriceWithID(self,id : int, price : float):
@@ -264,3 +267,13 @@ class DatabaseProduct:
         self.im.execute(sql_delete_query)
         self.db.commit()
         self.db.close()
+
+    def get_price_and_date_from_priceses(self,product:Product):
+        self.db = sql.connect(self.__dbLoc)
+        self.im = self.db.cursor()
+        tableName = f"prices{product.get_id()}"
+        sql_select_query = f"SELECT * FROM {tableName}"
+        self.im.execute(sql_select_query)
+        result = self.im.fetchall()
+        self.db.close()
+        return result
