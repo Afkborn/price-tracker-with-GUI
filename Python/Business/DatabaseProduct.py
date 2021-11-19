@@ -20,10 +20,11 @@ class DatabaseProduct:
     __dbName = "database.db"
     __products = list()
     __dbLen = 0
-    __dbLoc = f"{getcwd()}\Database\{__dbName}"
+    __dbLoc = fr"{getcwd()}\Databases\{__dbName}"
 
     def __init__(self):
-        pass
+        self.checkDB()
+
 
     def getDbName(self) -> str:
         """Database adını döner"""
@@ -49,17 +50,63 @@ class DatabaseProduct:
     
     def checkDB(self):
         """Database dosyasını kontrol eder, eğer konumda database dosyası varsa yüklemeye yarayan loadDb fonksiyonu çalışır yoksa o konumda bir database dosyası oluşturmaya yarayan createDb çalışır"""
-        if exists(self.__dbLoc):
-            #Konumda varsa
-            self.__loadDB()
-        else:
+        if not exists(self.__dbLoc):
             #Konumda yoksa
             self.__createDB()
+            
 
-    def __loadDB(self):
-        """Database dosyasını yükler"""
-        pass
+    def loadDB(self):
+        """Database dosyasını yüklemeye yarar. Yüklenen değerler Product Classından bir obje olarak products listesine eklenir. """
+        self.__products.clear()
+        self.db = sql.connect(self.__dbLoc)
+        self.im = self.db.cursor()
+        self.im.execute("SELECT name FROM sqlite_master")
+        tableNames = self.im.fetchall()
+        newTableNames = []
+        for i in tableNames:
+            i = str(i).replace("(","").replace(")","").replace("'","").replace(",","")
+            newTableNames.append(i)
+        tableNames = newTableNames
+        if "products" in tableNames : #and "prices" in tableNames and "stocks" in tableNames
+            self.im.execute("SELECT * FROM products")
+            allDb = self.im.fetchall()
+            for i in allDb:
+                
+                #id,isim,link,check_time_sec,fiyat_takip,stok_takip,fiyat,stok,son_kontrol_zamani,domain
+                id, isim, link, check_time_sec, fiyat_takip, stok_takip, fiyat, stok, son_kontrol_zamani, domain = i
 
+                if stok =="True":
+                    stok=True
+                elif stok == "False":
+                    stok = False
+                else:
+                    stok = None
+
+                if fiyat_takip == "True":
+                    fiyat_takip = True
+                else:
+                    fiyat_takip = False
+
+                if stok_takip == "True":
+                    stok_takip = True
+                else:
+                    stok_takip = False  
+
+                if fiyat == "None":
+                    fiyat = None
+                
+                myProduct = Product(id,isim,link,check_time_sec,fiyat_takip,stok_takip,fiyat,stok,son_kontrol_zamani,domain)
+                #(1, 'Raspberry Pi Zero 2 W\n', 'https://market.samm.com/raspberry-pi-zero-2-w', 600, 'True', 'True', 'None', 'None', 'None', 'market.samm.com')
+                self.__products.append(myProduct)
+            self.__isLoaded = True
+        else:
+            self.im.execute(CREATETABLEPRODUCT)
+            # self.im.execute(CREATETABLEPRICES)
+            # self.im.execute(CREATETABLESTOCKS)
+            self.db.commit()
+            self.__isLoaded = True
+        self.db.close()
+        return self.__products
 
     def __createDB(self):
         """kayıtlı konumda (öğrenmek için getDbLoc fonksiyonu kullanılabilir) database oluşturur. """
@@ -81,3 +128,65 @@ class DatabaseProduct:
         self.__dbLen = len(self.im.fetchall())
         self.db.close() 
         return self.__dbLen 
+
+    def getProductLenFromDB(self) -> int:
+        """Database'de kayıtlı olan products listesinin uzunluğunu döner."""
+        self.db = sql.connect(self.__dbLoc)
+        self.im = self.db.cursor()
+        self.im.execute("select last_insert_rowid() from products")
+        self.__dbLen = len(self.im.fetchall())
+        self.db.close() 
+        return self.__dbLen 
+
+    def addProduct(self,product:Product):
+        """Database'e ürün ekler."""
+        self.db = sql.connect(self.__dbLoc)
+        self.im = self.db.cursor()
+        # id,isim,link,check_time_sec,fiyat_takip,stok_takip,fiyat,stok,son_kontrol_zamani,domain
+        # get_id get_isim get_link get_check_time_sec get_fiyat_takip get_stok_takip get_fiyat get_stok get_son_kontrol_zamani get_domain
+        KEY = f"isim,link,check_time_sec,fiyat_takip,stok_takip,fiyat,stok,son_kontrol_zamani,domain"
+        VALUES = f"""
+        '{product.get_isim()}',
+        '{product.get_link()}',
+        '{product.get_check_time_sec()}',
+        '{product.get_fiyat_takip()}',
+        '{product.get_stok_takip()}',
+        '{product.get_fiyat()}',
+        '{product.get_stok()}',
+        '{product.get_son_kontrol_zamani()}',
+        '{product.get_domain()}'
+        """
+        self.im.execute(f"INSERT INTO products({KEY}) VALUES({VALUES})")
+        product.set_id = self.im.lastrowid
+        self.db.commit()
+        self.db.close()
+
+        #find id from sqlite
+
+    def updatePriceWithID(self,id : int, price : float):
+        self.db = sql.connect(self.__dbLoc)
+        self.im = self.db.cursor()
+        sql_update_query = f"""Update products set fiyat = {price} where id = {id}"""
+        self.im.execute(sql_update_query)
+        self.db.commit()
+        self.db.close()
+
+    def updateStockWithId(self,id : int, stock : bool):
+        self.db = sql.connect(self.__dbLoc)
+        self.im = self.db.cursor()
+        if stock:
+            sql_update_query = f"""Update products set stok = 'True' where id = {id}"""
+        else:
+            sql_update_query = f"""Update products set stok = 'False' where id = {id}"""
+        self.im.execute(sql_update_query)
+        self.db.commit()
+        self.db.close()
+
+    def updateSonKontrolZamaniWithId(self,id : int, son_kontrol_zamani : float):
+        self.db = sql.connect(self.__dbLoc)
+        self.im = self.db.cursor()
+        sql_update_query = f"""Update products set son_kontrol_zamani = {son_kontrol_zamani} where id = {id}"""
+        self.im.execute(sql_update_query)
+        self.db.commit()
+        self.db.close()
+
