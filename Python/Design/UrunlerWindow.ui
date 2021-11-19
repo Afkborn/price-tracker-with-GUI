@@ -6,13 +6,13 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
+    <width>1000</width>
     <height>400</height>
    </rect>
   </property>
   <property name="maximumSize">
    <size>
-    <width>800</width>
+    <width>1000</width>
     <height>400</height>
    </size>
   </property>
@@ -25,7 +25,7 @@
      <rect>
       <x>10</x>
       <y>320</y>
-      <width>781</width>
+      <width>981</width>
       <height>41</height>
      </rect>
     </property>
@@ -46,14 +46,17 @@
      </item>
     </layout>
    </widget>
-   <widget class="QListView" name="product_list_widget">
+   <widget class="QTableWidget" name="product_table_widget">
     <property name="geometry">
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>780</width>
+      <width>981</width>
       <height>300</height>
      </rect>
+    </property>
+    <property name="editTriggers">
+     <set>QAbstractItemView::NoEditTriggers</set>
     </property>
    </widget>
   </widget>
@@ -62,7 +65,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>1000</width>
      <height>21</height>
     </rect>
    </property>
