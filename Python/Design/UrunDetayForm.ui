@@ -7,13 +7,13 @@
     <x>0</x>
     <y>0</y>
     <width>450</width>
-    <height>350</height>
+    <height>420</height>
    </rect>
   </property>
   <property name="maximumSize">
    <size>
     <width>450</width>
-    <height>350</height>
+    <height>420</height>
    </size>
   </property>
   <property name="font">
@@ -30,10 +30,24 @@
      <x>10</x>
      <y>10</y>
      <width>431</width>
-     <height>337</height>
+     <height>391</height>
     </rect>
    </property>
    <layout class="QFormLayout" name="formLayout">
+    <item row="0" column="0">
+     <widget class="QLabel" name="label_5">
+      <property name="text">
+       <string>ID</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="1">
+     <widget class="QLineEdit" name="urun_id_edit">
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
     <item row="1" column="0">
      <widget class="QLabel" name="label">
       <property name="font">
@@ -76,24 +90,10 @@
       </property>
      </widget>
     </item>
-    <item row="7" column="1">
-     <widget class="QCheckBox" name="urun_fiyat_takip_cb">
-      <property name="text">
-       <string>Fiyat Takip Et</string>
-      </property>
-     </widget>
-    </item>
     <item row="3" column="0">
      <widget class="QLabel" name="label_3">
       <property name="text">
        <string>Kontrol Süresi</string>
-      </property>
-     </widget>
-    </item>
-    <item row="8" column="1">
-     <widget class="QCheckBox" name="urun_stok_takip_cb">
-      <property name="text">
-       <string>Stok Takip Et</string>
       </property>
      </widget>
     </item>
@@ -104,27 +104,6 @@
       </property>
      </widget>
     </item>
-    <item row="9" column="1">
-     <widget class="QPushButton" name="urun_kaydet_button">
-      <property name="text">
-       <string>Kaydet</string>
-      </property>
-     </widget>
-    </item>
-    <item row="9" column="0">
-     <widget class="QPushButton" name="urun_sil_button">
-      <property name="text">
-       <string>Ürün Sil</string>
-      </property>
-     </widget>
-    </item>
-    <item row="4" column="1">
-     <widget class="QLineEdit" name="urun_domain_edit">
-      <property name="readOnly">
-       <bool>true</bool>
-      </property>
-     </widget>
-    </item>
     <item row="4" column="0">
      <widget class="QLabel" name="label_4">
       <property name="text">
@@ -132,15 +111,8 @@
       </property>
      </widget>
     </item>
-    <item row="0" column="0">
-     <widget class="QLabel" name="label_5">
-      <property name="text">
-       <string>ID</string>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="1">
-     <widget class="QLineEdit" name="urun_id_edit">
+    <item row="4" column="1">
+     <widget class="QLineEdit" name="urun_domain_edit">
       <property name="readOnly">
        <bool>true</bool>
       </property>
@@ -167,17 +139,52 @@
       </property>
      </widget>
     </item>
-    <item row="10" column="1">
-     <widget class="QPushButton" name="urun_guncelle_button">
-      <property name="text">
-       <string>Verileri güncelle</string>
-      </property>
-     </widget>
-    </item>
     <item row="6" column="1">
      <widget class="QLineEdit" name="urun_stok_edit">
       <property name="readOnly">
        <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="7" column="1">
+     <widget class="QCheckBox" name="urun_fiyat_takip_cb">
+      <property name="text">
+       <string>Fiyat Takip Et</string>
+      </property>
+     </widget>
+    </item>
+    <item row="8" column="1">
+     <widget class="QCheckBox" name="urun_stok_takip_cb">
+      <property name="text">
+       <string>Stok Takip Et</string>
+      </property>
+     </widget>
+    </item>
+    <item row="9" column="0">
+     <widget class="QPushButton" name="urun_sil_button">
+      <property name="text">
+       <string>Ürün Sil</string>
+      </property>
+     </widget>
+    </item>
+    <item row="9" column="1">
+     <widget class="QPushButton" name="urun_kaydet_button">
+      <property name="text">
+       <string>Kaydet</string>
+      </property>
+     </widget>
+    </item>
+    <item row="11" column="1">
+     <widget class="QPushButton" name="urun_guncelle_button">
+      <property name="text">
+       <string>Verileri internetten güncelle</string>
+      </property>
+     </widget>
+    </item>
+    <item row="10" column="1">
+     <widget class="QPushButton" name="urun_grafik_goster_button">
+      <property name="text">
+       <string>Fiyat Grafiği Göster</string>
       </property>
      </widget>
     </item>

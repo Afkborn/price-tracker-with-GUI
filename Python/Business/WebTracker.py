@@ -31,7 +31,6 @@ class WebPrice:
                 self.getPage(product.get_link())
                 urunFiyat = (self.browser.find_element_by_css_selector("span[class='product-price']").text).replace(".","").replace(",",".")
                 return float(urunFiyat)
-
         else:
             return -1
 

@@ -52,7 +52,7 @@ class DatabaseProduct:
         """Database dosyasını kontrol eder, eğer konumda database dosyası varsa yüklemeye yarayan loadDb fonksiyonu çalışır yoksa o konumda bir database dosyası oluşturmaya yarayan createDb çalışır"""
         if not exists(self.__dbLoc):
             #Konumda yoksa
-            self.__createDB()
+            self.__create_product_table()
             
 
     def loadDB(self):
@@ -108,13 +108,11 @@ class DatabaseProduct:
         self.db.close()
         return self.__products
 
-    def __createDB(self):
+    def __create_product_table(self):
         """kayıtlı konumda (öğrenmek için getDbLoc fonksiyonu kullanılabilir) database oluşturur. """
         self.db = sql.connect(self.__dbLoc)
         self.im = self.db.cursor()
         self.im.execute(CREATETABLEPRODUCT)
-        # self.im.execute(CREATETABLEPRICES)
-        # self.im.execute(CREATETABLESTOCKS)
         self.db.commit()
         self.db.close()
         self.__isLoaded = True
@@ -129,14 +127,15 @@ class DatabaseProduct:
         self.db.close() 
         return self.__dbLen 
 
-    def getProductLenFromDB(self) -> int:
-        """Database'de kayıtlı olan products listesinin uzunluğunu döner."""
+    def create_price_list_for_product(self, product:Product):
+        """Product Classından bir obje alır ve bu obje için database üzerinde fiyat listesinin tablosunu oluşturur. """
         self.db = sql.connect(self.__dbLoc)
         self.im = self.db.cursor()
-        self.im.execute("select last_insert_rowid() from products")
-        self.__dbLen = len(self.im.fetchall())
-        self.db.close() 
-        return self.__dbLen 
+        tableName = f"price_{product.getId()}"
+        create_table_prices = f"""CREATE TABLE IF NOT EXISTS {tableName} (time INTEGER NOT NULL, price INTEGER NOT NULL)"""
+        self.im.execute(create_table_prices)
+        self.db.commit()
+        self.db.close()
 
     def addProduct(self,product:Product):
         """Database'e ürün ekler."""
@@ -157,11 +156,31 @@ class DatabaseProduct:
         '{product.get_domain()}'
         """
         self.im.execute(f"INSERT INTO products({KEY}) VALUES({VALUES})")
-        product.set_id = self.im.lastrowid
+        product.set_id(self.im.lastrowid)
+        
         self.db.commit()
         self.db.close()
 
-        #find id from sqlite
+        self.create_price_list_for_product(product)
+        self.add_price_priceList(product)
+
+        #create table for product prices
+
+    def add_price_priceList(self,product:Product):
+
+        self.db = sql.connect(self.__dbLoc)
+        self.im = self.db.cursor()
+
+        tableName = f"prices{product.get_id()}"
+        KEY = f"time,price"
+        VALUES = f"'{product.get_son_kontrol_zamani()}','{product.get_fiyat()}'"
+
+        sql_command = f"INSERT INTO {tableName}({KEY}) VALUES({VALUES})"
+
+        self.im.execute(sql_command)
+        self.db.commit()
+        self.db.close()
+
 
     def updatePriceWithID(self,id : int, price : float):
         self.db = sql.connect(self.__dbLoc)
@@ -189,4 +208,59 @@ class DatabaseProduct:
         self.im.execute(sql_update_query)
         self.db.commit()
         self.db.close()
+    
 
+     #isim url domain kontrol time fiyat_takip stok_takip
+    def update_isim_with_id(self, id:int, isim : str):
+        self.db = sql.connect(self.__dbLoc)
+        self.im = self.db.cursor()
+        sql_update_query = f"""Update products set isim = '{isim}' where id = {id}"""
+        self.im.execute(sql_update_query)
+        self.db.commit()
+        self.db.close()
+    
+    def update_url_with_id(self, id:int, url : str):
+        self.db = sql.connect(self.__dbLoc)
+        self.im = self.db.cursor()
+        sql_update_query = f"""Update products set url = '{url}' where id = {id}"""
+        self.im.execute(sql_update_query)
+        self.db.commit()
+        self.db.close()
+
+    def update_check_time_sec_with_id(self, id:int, check_time_sec : int):
+        self.db = sql.connect(self.__dbLoc)
+        self.im = self.db.cursor()
+        sql_update_query = f"""Update products set check_time_sec = {check_time_sec} where id = {id}"""
+        self.im.execute(sql_update_query)
+        self.db.commit()
+        self.db.close()
+    
+    def update_fiyat_takip_with_id(self,id:int, fiyat_takip : bool):
+        self.db = sql.connect(self.__dbLoc)
+        self.im = self.db.cursor()
+        if fiyat_takip:
+            sql_update_query = f"""Update products set fiyat_takip = 'True' where id = {id}"""
+        else:
+            sql_update_query = f"""Update products set fiyat_takip = 'False' where id = {id}"""
+        self.im.execute(sql_update_query)
+        self.db.commit()
+        self.db.close()
+    
+    def update_stok_takip_with_id(self,id:int, stok_takip : bool):
+        self.db = sql.connect(self.__dbLoc)
+        self.im = self.db.cursor()
+        if stok_takip:
+            sql_update_query = f"""Update products set stok_takip = 'True' where id = {id}"""
+        else:
+            sql_update_query = f"""Update products set stok_takip = 'False' where id = {id}"""
+        self.im.execute(sql_update_query)
+        self.db.commit()
+        self.db.close()
+
+    def delete_product_with_id(self,id:int):
+        self.db = sql.connect(self.__dbLoc)
+        self.im = self.db.cursor()
+        sql_delete_query = f"""Delete from products where id = {id}"""
+        self.im.execute(sql_delete_query)
+        self.db.commit()
+        self.db.close()

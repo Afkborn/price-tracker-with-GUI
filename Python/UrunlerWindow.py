@@ -9,7 +9,7 @@ from datetime import date, datetime
 from PyQt5 import QtWidgets, uic
 from PyQt5.QtCore import QTime, QTimer #timer
 from PyQt5.QtTest import QTest # qsleep 
-
+from PyQt5.QtWidgets import QErrorMessage, QMessageBox
 
 #UI
 from Python.Design.UrunlerWindowUI import Ui_UrunlerWindow
@@ -60,7 +60,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_UrunlerWindow):
         self.urunEkleForm.getBrowser(self.web_browser)
 
         self.hakkimdaForm = HakkımdaForm(self)
+        
         self.urunDetayForm = UrunDetayForm(self)
+        self.urunDetayForm.getBrowser(self.web_browser)
+
 
         self.actionAyarlar.triggered.connect(self.showSettingsWindow)
         self.actionCikis.triggered.connect(self.close)
@@ -73,9 +76,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_UrunlerWindow):
 
 
 
-
-        myProduct = self.createTestProduct()
-        self.detay_button.clicked.connect(lambda: self.showProductDetailWindowWithProduct(myProduct))
+        self.detay_button.clicked.connect(self.showProductDetailWindowWithProduct)
         
 
         
@@ -88,10 +89,15 @@ class MainWindow(QtWidgets.QMainWindow, Ui_UrunlerWindow):
     def showNewProductWindow(self):
         self.urunEkleForm.show()
 
-    def showProductDetailWindowWithProduct(self,product:Product):
-        self.urunDetayForm.show()
-        self.urunDetayForm.setProduct(product)
-        self.urunDetayForm.loadProduct()
+    def showProductDetailWindowWithProduct(self):
+        selected = self.product_table_widget.currentRow()
+        if not selected == -1:
+            self.urunDetayForm.show()
+            self.urunDetayForm.setProduct(self.__productList[selected])
+            self.urunDetayForm.loadProduct()
+        else:
+            QMessageBox.about(self, "Error", "Before click detail button select one product from list.")
+            
 
     def createTestProduct(self) -> Product:
         myProduct = Product(id=1,isim="aaa",link="https://market.samm.com/raspberry-pi-zero-2-w",check_time_sec=600,fiyat_takip=True,stok_takip=True,fiyat=18.99,stok=True,son_kontrol_zamani=1637312657.6746655,domain="market.samm.com")
@@ -123,13 +129,17 @@ class MainWindow(QtWidgets.QMainWindow, Ui_UrunlerWindow):
             self.load_products_from_sqlite()
             self.load_product_table_attributes()
             self.load_product_from_product_list()
-
+        if self.urunDetayForm.URUN_GUNCELLENDI_MI:
+            self.load_products_from_sqlite()
+            self.load_product_table_attributes()
+            self.load_product_from_product_list()
+            self.urunDetayForm.URUN_GUNCELLENDI_MI = False
 
     def kontrol_zamani_kontrol_et(self):
         for index,product in enumerate(self.__productList):
             guncelTime = time()
             if product.get_son_kontrol_zamani() + product.get_check_time_sec() < guncelTime:
-                print(f"güncellemesi gelmiş  {product.get_isim()}")
+                print(f"{product.get_isim()} güncelleniyor.")
                 
                 #TODO GÜNCELLEMESİ YAP
                 price = self.web_browser.getPriceFromProduct(product)
@@ -141,14 +151,11 @@ class MainWindow(QtWidgets.QMainWindow, Ui_UrunlerWindow):
 
                 #TODO DATABASE PRODUCT UPDATE FONKSİYONU YAZ
                 self.databaseProduct.updatePriceWithID(product.get_id(),product.get_fiyat())
-                
                 self.databaseProduct.updateStockWithId(product.get_id(),product.get_stok())
+                self.databaseProduct.add_price_priceList(product)
                 self.databaseProduct.updateSonKontrolZamaniWithId(product.get_id(),product.get_son_kontrol_zamani())
                 
                 self.notify_product_list_changed(control=True)
-                
-            else:
-                print(f"güncellemesi gelmemiş.{product.get_isim()}")
 
 
 
