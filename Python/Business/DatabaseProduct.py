@@ -166,6 +166,36 @@ class DatabaseProduct:
 
         #create table for product prices
 
+    def get_product_with_id(self,id:int) -> Product:
+        """id ile ürünü getirir."""
+        self.db = sql.connect(self.__dbLoc)
+        self.im = self.db.cursor()
+        self.im.execute(f"SELECT * FROM products WHERE id = {id}")
+        product = self.im.fetchone()
+        id, isim, link, check_time_sec, fiyat_takip, stok_takip, fiyat, stok, son_kontrol_zamani, domain = product
+        if stok =="True":
+            stok=True
+        elif stok == "False":
+            stok = False
+        else:
+            stok = None
+
+        if fiyat_takip == "True":
+            fiyat_takip = True
+        else:
+            fiyat_takip = False
+
+        if stok_takip == "True":
+            stok_takip = True
+        else:
+            stok_takip = False  
+
+        if fiyat == "None":
+            fiyat = None
+        myProduct = Product(id,isim,link,check_time_sec,fiyat_takip,stok_takip,fiyat,stok,son_kontrol_zamani,domain)
+        self.db.close()
+        return myProduct
+
     def add_price_priceList(self,product:Product):
         try:
             self.db = sql.connect(self.__dbLoc)
@@ -225,7 +255,7 @@ class DatabaseProduct:
     def update_url_with_id(self, id:int, url : str):
         self.db = sql.connect(self.__dbLoc)
         self.im = self.db.cursor()
-        sql_update_query = f"""Update products set url = '{url}' where id = {id}"""
+        sql_update_query = f"""Update products set link = '{url}' where id = {id}"""
         self.im.execute(sql_update_query)
         self.db.commit()
         self.db.close()

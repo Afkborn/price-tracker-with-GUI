@@ -9,7 +9,6 @@ from datetime import date, datetime
 from PyQt5 import QtWidgets, uic
 from PyQt5.QtCore import QTime, QTimer #timer
 from PyQt5.QtTest import QTest # qsleep 
-from PyQt5.QtWidgets import QErrorMessage, QMessageBox
 
 #UI
 from Python.Design.UrunlerWindowUI import Ui_UrunlerWindow
@@ -18,6 +17,8 @@ from Python.HakkimdaForm import HakkımdaForm
 from Python.UrunEkleForm import UrunEkleForm
 from Python.UrunDetayForm import UrunDetayForm
 from Python.UrunGuncelleniyorForm import UrunGuncelleniyorForm
+import Python.MessageBox as MessageBox
+
 
 #Business
 from Python.Business.DatabaseProduct import DatabaseProduct
@@ -104,7 +105,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_UrunlerWindow):
             self.urunDetayForm.setProduct(self.__productList[selected])
             self.urunDetayForm.loadProduct()
         else:
-            QMessageBox.about(self, "Error", "Before click detail button select one product from list.")
+            MessageBox.getBasicMB(self,"Error","Before click detail button select one product from list.")
             
     def return_time(self):
         return  strftime("%H:%M:%S") 

@@ -12,7 +12,6 @@ from Python.Model.Product import Product
 from PyQt5.QtCore import QTime
 from PyQt5 import QtWidgets
 
-
 #Business
 from Python.Business.DatabaseProduct import DatabaseProduct
 from Python.Business.Chart import Chart
@@ -20,7 +19,7 @@ from Python.Business.Chart import Chart
 
 #UI
 from Python.Design.UrunDetayFormUI import Ui_UrunDetayForm
-
+import Python.MessageBox as MessageBox
 
 class UrunDetayForm(QtWidgets.QMainWindow, Ui_UrunDetayForm):
     URUN_GUNCELLENDI_MI = False
@@ -79,11 +78,14 @@ class UrunDetayForm(QtWidgets.QMainWindow, Ui_UrunDetayForm):
                 #TODO DATABASE PRODUCT UPDATE FONKSİYONU YAZ
                 self.databaseProduct.updatePriceWithID(self.product.get_id(),self.product.get_fiyat())
                 self.databaseProduct.updateStockWithId(self.product.get_id(),self.product.get_stok())
-                
+                self.databaseProduct.updateSonKontrolZamaniWithId(self.product.get_id(),self.product.get_son_kontrol_zamani())
                 self.databaseProduct.add_price_priceList(self.product)
 
-                self.databaseProduct.updateSonKontrolZamaniWithId(self.product.get_id(),self.product.get_son_kontrol_zamani())
+                self.product = self.databaseProduct.get_product_with_id(self.product.get_id())
+                self.loadProduct()
                 self.URUN_GUNCELLENDI_MI = True
+                MessageBox.getBasicMB(self,"Success","Price and stock updated.")
+
 
     def getDomainFromURL(self,url:str) -> str:
         """Verilen str türündeki URL adresinin hangi domaine ait olduğunu döner"""
@@ -106,7 +108,7 @@ class UrunDetayForm(QtWidgets.QMainWindow, Ui_UrunDetayForm):
         if urun_url != self.product.get_link():
             #update url
             print("url güncelle")
-            self.databaseProduct.update_link_with_id(self.product.get_id(),urun_url)
+            self.databaseProduct.update_url_with_id(self.product.get_id(),urun_url)
         if urun_domain != self.product.get_domain():
             #update domain
             print("domain güncelle")
@@ -125,10 +127,17 @@ class UrunDetayForm(QtWidgets.QMainWindow, Ui_UrunDetayForm):
             print("stok güncelle")
             self.databaseProduct.update_stok_takip_with_id(self.product.get_id(),urun_stok_takip)
         self.URUN_GUNCELLENDI_MI = True
+        MessageBox.getBasicMB(self,"Success","Update product is successful.")
+        self.close()
+
+
+
 
     def delete_product(self):
         self.databaseProduct.delete_product_with_id(self.product.get_id())
         self.URUN_GUNCELLENDI_MI = True
+        MessageBox.getBasicMB(self,"Success","Delete successful.")
+        self.close()
 
     def show_product_price_chart(self):
         myChart = Chart(self.product)

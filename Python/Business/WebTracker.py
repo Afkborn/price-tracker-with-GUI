@@ -1,4 +1,6 @@
-SUPPORTEDWEBSITES = ["market.samm.com"]
+
+SUPPORTEDWEBSITES = ["market.samm.com","www.amazon.com.tr"]
+
 
 from typing import SupportsRound
 from Python.Model.Product import Product
@@ -24,26 +26,43 @@ class WebPrice:
     def close(self):
         self.browser.close()
         
-
+    def str_price_to_float(self,price : str) -> float:
+        """string fiyatını float'a çevirme"""
+        price = price.replace(".","")
+        price = price.replace(",",".")
+        price = price.replace("TL","")
+        return price
 
     def getPriceFromProduct(self,product :Product) -> float:
         if product.get_domain() in SUPPORTEDWEBSITES:
+
             if product.get_domain() == SUPPORTEDWEBSITES[0]:
+                #SAMM MARKET
                 self.getPage(product.get_link())
-                urunFiyat = (self.browser.find_element_by_css_selector("span[class='product-price']").text).replace(".","").replace(",",".")
-                return float(urunFiyat)
+                urunFiyat = (self.browser.find_element_by_css_selector("span[class='product-price']").text)
+                return self.str_price_to_float(urunFiyat)
+            elif product.get_domain() == SUPPORTEDWEBSITES[1]:
+                #AMAZON
+                self.getPage(product.get_link())
+                urunFiyat = (self.browser.find_element_by_css_selector("span[class='a-price a-text-price a-size-medium']").text)
+                return self.str_price_to_float(urunFiyat)
         else:
             return -1
 
     def getStockFromProduct(self,product:Product) -> bool:
         if product.get_domain() in SUPPORTEDWEBSITES:
             if product.get_domain() == SUPPORTEDWEBSITES[0]:
+                #SAMM MARKET
                 self.getPage(product.get_link())
                 try:
                     self.browser.find_element_by_css_selector("div[class='fl col-12 mb-50 stock-durum2']")
                     return False
                 except:
                     return True
+            if product.get_domain() == SUPPORTEDWEBSITES[1]:
+                #AMAZON
+                self.getPage(product.get_link())
+                return True
         else:
             return False
     

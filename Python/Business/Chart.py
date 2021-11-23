@@ -19,7 +19,6 @@ class Chart:
         self.date_and_priceses_list = self.databaseProduct.get_price_and_date_from_priceses(product)
 
         #[(1637335334.2175646, 0), (1637335593.4976118, 0), (1637335599.9137168, 0), (1637336532.1519344, 0), (1637336673.8786097, 0), (1637337324.1453562, 0), (1637338057.8657577, 0), (1637340169.720858, 0)]
-        print(self.date_and_priceses_list)
         for date_and_price in self.date_and_priceses_list:
             self.date.append(date_and_price[0])
             self.price.append(date_and_price[1])
