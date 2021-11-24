@@ -79,6 +79,7 @@
     <property name="title">
      <string>Tercihler</string>
     </property>
+    <addaction name="actionDesteklenen_Siteler"/>
     <addaction name="actionAyarlar"/>
     <addaction name="actionCikis"/>
     <addaction name="separator"/>
@@ -111,6 +112,11 @@
    </property>
    <property name="shortcut">
     <string>Alt+Y</string>
+   </property>
+  </action>
+  <action name="actionDesteklenen_Siteler">
+   <property name="text">
+    <string>Desteklenen Siteler</string>
    </property>
   </action>
  </widget>

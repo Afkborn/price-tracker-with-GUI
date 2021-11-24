@@ -1,5 +1,10 @@
 
-SUPPORTEDWEBSITES = ["market.samm.com","www.amazon.com.tr"]
+
+#SUPPORTED WEBSITE
+import Python.Business.SupportedWebsites as SW
+
+
+SUPPORTEDWEBSITES =  SW.getSupportedWebsites()
 
 
 from typing import SupportsRound
@@ -43,9 +48,32 @@ class WebPrice:
                 return self.str_price_to_float(urunFiyat)
             elif product.get_domain() == SUPPORTEDWEBSITES[1]:
                 #AMAZON
+                try:
+                    self.getPage(product.get_link())
+                    urunFiyat = (self.browser.find_element_by_css_selector("span[class='a-price a-text-price a-size-medium']").text)
+                    return self.str_price_to_float(urunFiyat)
+                except:
+                    return 0.0
+            elif product.get_domain() == SUPPORTEDWEBSITES[2]:
+                #TRENDYOL
                 self.getPage(product.get_link())
-                urunFiyat = (self.browser.find_element_by_css_selector("span[class='a-price a-text-price a-size-medium']").text)
-                return self.str_price_to_float(urunFiyat)
+                urunDiv = self.browser.find_element_by_css_selector("div[class='product-detail-container']")
+                urunFiyatDsc = urunDiv.find_element_by_css_selector("span[class='prc-dsc']").text
+                urunFiyatSlg = urunDiv.find_element_by_css_selector("span[class='prc-slg']").text
+                if urunFiyatDsc == "":
+                    return self.str_price_to_float(urunFiyatSlg)
+                else:
+                    return self.str_price_to_float(urunFiyatDsc)
+            elif product.get_domain() == SUPPORTEDWEBSITES[3]:
+                #HEPSİBURADA
+                self.getPage(product.get_link())
+
+                try:
+                    urunSpan = self.browser.find_element_by_css_selector("span[id='offering-price']").get_attribute('content')
+                    return float(urunSpan)
+                except Exception as e :
+                    print(f"Error {e}")
+                    return 0.0
         else:
             return -1
 
@@ -59,10 +87,30 @@ class WebPrice:
                     return False
                 except:
                     return True
-            if product.get_domain() == SUPPORTEDWEBSITES[1]:
+            elif product.get_domain() == SUPPORTEDWEBSITES[1]:
                 #AMAZON
                 self.getPage(product.get_link())
-                return True
+                try:
+                    self.browser.find_element_by_css_selector("span[class='a-color-price a-text-bold']")
+                    return False
+                except:
+                    return True
+            elif product.get_domain() == SUPPORTEDWEBSITES[2]:
+                #TRENDYOL
+                self.getPage(product.get_link())
+                try:
+                    self.browser.find_element_by_css_selector("button[class='add-to-basket sold-out']")
+                    return True
+                except:
+                    return False
+            elif product.get_domain() == SUPPORTEDWEBSITES[3]:
+                #HEPSİBURADA
+                self.getPage(product.get_link())
+                try:
+                    self.browser.find_element_by_css_selector("button[id='addToCart']")
+                    return True
+                except:
+                    return False
         else:
             return False
     
