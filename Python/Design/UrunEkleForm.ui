@@ -7,13 +7,13 @@
     <x>0</x>
     <y>0</y>
     <width>450</width>
-    <height>240</height>
+    <height>270</height>
    </rect>
   </property>
   <property name="maximumSize">
    <size>
     <width>450</width>
-    <height>240</height>
+    <height>300</height>
    </size>
   </property>
   <property name="font">
@@ -30,7 +30,7 @@
      <x>10</x>
      <y>10</y>
      <width>431</width>
-     <height>211</height>
+     <height>251</height>
     </rect>
    </property>
    <layout class="QFormLayout" name="formLayout">
@@ -120,14 +120,14 @@
       </property>
      </widget>
     </item>
-    <item row="6" column="1">
+    <item row="7" column="1">
      <widget class="QPushButton" name="urun_ekle_button">
       <property name="text">
        <string>Ekle</string>
       </property>
      </widget>
     </item>
-    <item row="6" column="0">
+    <item row="7" column="0">
      <widget class="QPushButton" name="urun_temizle_button">
       <property name="text">
        <string>Temizle</string>
@@ -145,6 +145,16 @@
      <widget class="QLabel" name="label_4">
       <property name="text">
        <string>Domain</string>
+      </property>
+     </widget>
+    </item>
+    <item row="6" column="1">
+     <widget class="QCheckBox" name="urun_otomatik_isim_cb">
+      <property name="text">
+       <string>Otomatik İsim</string>
+      </property>
+      <property name="checkable">
+       <bool>true</bool>
       </property>
      </widget>
     </item>

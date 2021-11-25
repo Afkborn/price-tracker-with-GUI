@@ -3,7 +3,7 @@ from sys import argv
 from os import getcwd
 from time import strftime,time
 from datetime import date, datetime
-
+from webbrowser import open
 
 #PyQT5
 from PyQt5 import QtWidgets, uic
@@ -18,6 +18,7 @@ from Python.UrunEkleForm import UrunEkleForm
 from Python.UrunDetayForm import UrunDetayForm
 from Python.UrunGuncelleniyorForm import UrunGuncelleniyorForm
 from Python.DesteklenenSiteler import DesteklenenSitelerForm
+from Python.IletisimForm import IletisimForm
 import Python.MessageBox as MessageBox
 
 
@@ -64,7 +65,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_UrunlerWindow):
         self.hakkimdaForm = HakkımdaForm(self)
         self.urunGuncelleniyorForm = UrunGuncelleniyorForm(self)
         self.desteklenenSitelerForm = DesteklenenSitelerForm(self)
-
+        self.iletisimForm = IletisimForm(self)
         self.urunEkleForm.getBrowser(self.web_browser)
         self.urunDetayForm.getBrowser(self.web_browser)
         
@@ -83,8 +84,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_UrunlerWindow):
 
         self.detay_button.clicked.connect(self.showProductDetailWindowWithProduct)
         self.actionDesteklenen_Siteler.triggered.connect(self.showDesteklenenSitelerForm)
-
-
+        self.web_start_button.clicked.connect(self.web_browser_start)
+        self.action_iletisim.triggered.connect(self.showIletisimForm)
         
 
     def showSettingsWindow(self):
@@ -92,15 +93,13 @@ class MainWindow(QtWidgets.QMainWindow, Ui_UrunlerWindow):
 
     def showAboutWindow(self):
         self.hakkimdaForm.show()
+
     def showNewProductWindow(self):
         self.urunEkleForm.show()
 
     def showUrunGuncelleniyorForm(self,productName:str):
         self.urunGuncelleniyorForm.show()
         self.urunGuncelleniyorForm.changeLabelText(productName)
-
-    def hideUrunGuncelleniyorForm(self):
-        self.urunGuncelleniyorForm.hide()
 
     def showProductDetailWindowWithProduct(self):
         selected = self.product_table_widget.currentRow()
@@ -114,8 +113,20 @@ class MainWindow(QtWidgets.QMainWindow, Ui_UrunlerWindow):
     def showDesteklenenSitelerForm(self):
         self.desteklenenSitelerForm.printDesteklenenSiteler()
         self.desteklenenSitelerForm.show()
-        
+    
+    def showIletisimForm(self):
+        self.iletisimForm.show()
 
+    def hideUrunGuncelleniyorForm(self):
+        self.urunGuncelleniyorForm.hide()
+
+
+    def web_browser_start(self):
+        selected = self.product_table_widget.currentRow()
+        if not selected == -1:
+            open(self.__productList[selected].get_link())
+        else:
+            MessageBox.getBasicMB(self,"Error","Before click web start button select one product from list.")
 
     def return_time(self):
         return  strftime("%H:%M:%S") 

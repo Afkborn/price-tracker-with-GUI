@@ -19,18 +19,34 @@
      <x>10</x>
      <y>10</y>
      <width>371</width>
-     <height>271</height>
+     <height>241</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <pointsize>12</pointsize>
+     <pointsize>10</pointsize>
      <weight>75</weight>
      <bold>true</bold>
     </font>
    </property>
    <property name="text">
-    <string>DESTEKLENEN SİTELERİ YAZ</string>
+    <string>TEST</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>270</y>
+     <width>381</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Site desteği için&lt;span style=&quot; font-weight:600;&quot;&gt; Tercihler-&amp;gt;İletişim &lt;/span&gt; menüsünden iletişime geçebilirsiniz.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignCenter</set>

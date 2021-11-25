@@ -83,6 +83,7 @@
     <addaction name="actionAyarlar"/>
     <addaction name="actionCikis"/>
     <addaction name="separator"/>
+    <addaction name="action_iletisim"/>
     <addaction name="actionHakkimda"/>
    </widget>
    <addaction name="menuFile"/>
@@ -117,6 +118,11 @@
   <action name="actionDesteklenen_Siteler">
    <property name="text">
     <string>Desteklenen Siteler</string>
+   </property>
+  </action>
+  <action name="action_iletisim">
+   <property name="text">
+    <string>İletişim</string>
    </property>
   </action>
  </widget>

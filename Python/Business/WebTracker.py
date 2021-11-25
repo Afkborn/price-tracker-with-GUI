@@ -113,7 +113,26 @@ class WebPrice:
                     return False
         else:
             return False
-    
+
+    def getProductName(self,product:Product) -> str:
+        if product.get_domain() in SUPPORTEDWEBSITES:
+            if product.get_domain() == SUPPORTEDWEBSITES[0]:
+                #SAMM MARKET
+                self.getPage(product.get_link())    
+                return (self.browser.find_element_by_css_selector("h1[id='productName']").text).strip()
+            elif product.get_domain() == SUPPORTEDWEBSITES[1]:
+                #AMAZON
+                self.getPage(product.get_link())
+                return (self.browser.find_element_by_css_selector("span[id='productTitle']").text).strip()
+            elif product.get_domain() == SUPPORTEDWEBSITES[2]:
+                #TRENDYOL
+                self.getPage(product.get_link())
+                return self.browser.title.strip()
+            elif product.get_domain() == SUPPORTEDWEBSITES[3]:
+                #HEPSİBURADA
+                self.getPage(product.get_link())
+                return (self.browser.find_element_by_css_selector("h1[id='product-name']").text).strip()
+
 
     def __startBrowser(self):
         self.browser = Chrome(executable_path=self.__chromeDriverPath,options=self.options)
