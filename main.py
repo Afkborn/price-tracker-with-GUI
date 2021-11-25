@@ -10,6 +10,15 @@ def create_folder_if_not_exists(folder_names):
             makedirs(folder_name)
 
 
+
+#TODO config file olustur
+#TODO config file oku
+#TODO chrome yüklü mu kontrol et
+#TODO chrome versiyonu kontrol et
+#TODO chrome driver kontrol et yoksa indir
+#TODO ayarlara chrome headless ayarını ekle
+
+
 def main():
     create_folder_if_not_exists(folder_names)
     app = QtWidgets.QApplication(argv)

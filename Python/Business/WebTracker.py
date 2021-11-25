@@ -17,7 +17,9 @@ from selenium.webdriver import ActionChains
 
 class WebPrice:
     __chromeDriverPath = getcwd() +  fr"/Driver/chromedriver.exe"
+    # TODO CHECK EXISTS CHROME DRIVER
     def __init__(self, profileName="profile1",headless = False):
+
         self.options = ChromeOptions()
         self.__profileName = profileName
         self.__profileLoc = getcwd() + fr"/Profile/{self.__profileName}"
