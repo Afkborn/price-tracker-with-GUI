@@ -13,7 +13,7 @@ from PyQt5.QtTest import QTest # qsleep
 #UI
 from Python.Design.UrunlerWindowUI import Ui_UrunlerWindow
 from Python.AyarlarForm import AyarlarForm
-from Python.HakkimdaForm import HakkımdaForm
+from Python.HakkimdaForm import HakkimdaForm
 from Python.UrunEkleForm import UrunEkleForm
 from Python.UrunDetayForm import UrunDetayForm
 from Python.UrunGuncelleniyorForm import UrunGuncelleniyorForm
@@ -46,9 +46,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_UrunlerWindow):
         self.notify_product_list_changed_timer.start(1000)
 
         #kontrol zamanı gelip gelmediğpini kontrol eden timer
-        self.kontrol_zamanı_timer = QTimer()
-        self.kontrol_zamanı_timer.timeout.connect(self.kontrol_zamani_kontrol_et)
-        self.kontrol_zamanı_timer.start(1000)
+        self.kontrol_zamani_timer = QTimer()
+        self.kontrol_zamani_timer.timeout.connect(self.kontrol_zamani_kontrol_et)
+        self.kontrol_zamani_timer.start(1000)
 
 
         #DATABASE
@@ -62,7 +62,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_UrunlerWindow):
         self.ayarlarForm = AyarlarForm(self)
         self.urunEkleForm = UrunEkleForm(self)
         self.urunDetayForm = UrunDetayForm(self)
-        self.hakkimdaForm = HakkımdaForm(self)
+        self.hakkimdaForm = HakkimdaForm(self)
         self.urunGuncelleniyorForm = UrunGuncelleniyorForm(self)
         self.desteklenenSitelerForm = DesteklenenSitelerForm(self)
         self.iletisimForm = IletisimForm(self)
@@ -108,7 +108,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_UrunlerWindow):
             self.urunDetayForm.setProduct(self.__productList[selected])
             self.urunDetayForm.loadProduct()
         else:
-            MessageBox.getBasicMB(self,"Error","Before click detail button select one product from list.")
+            MessageBox.getBasicMB(self,"Hata","Listeden kayıt seçin.")
     
     def showDesteklenenSitelerForm(self):
         self.desteklenenSitelerForm.printDesteklenenSiteler()
@@ -126,7 +126,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_UrunlerWindow):
         if not selected == -1:
             open(self.__productList[selected].get_link())
         else:
-            MessageBox.getBasicMB(self,"Error","Before click web start button select one product from list.")
+            MessageBox.getBasicMB(self,"Hata","Listeden kayıt seçin.")
 
     def return_time(self):
         return  strftime("%H:%M:%S") 

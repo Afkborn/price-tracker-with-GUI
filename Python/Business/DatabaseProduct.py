@@ -96,13 +96,11 @@ class DatabaseProduct:
                     fiyat = None
                 
                 myProduct = Product(id,isim,link,check_time_sec,fiyat_takip,stok_takip,fiyat,stok,son_kontrol_zamani,domain)
-                #(1, 'Raspberry Pi Zero 2 W\n', 'https://market.samm.com/raspberry-pi-zero-2-w', 600, 'True', 'True', 'None', 'None', 'None', 'market.samm.com')
+
                 self.__products.append(myProduct)
             self.__isLoaded = True
         else:
             self.im.execute(CREATETABLEPRODUCT)
-            # self.im.execute(CREATETABLEPRICES)
-            # self.im.execute(CREATETABLESTOCKS)
             self.db.commit()
             self.__isLoaded = True
         self.db.close()

@@ -7,7 +7,7 @@ import Python.Business.SupportedWebsites as SW
 SUPPORTEDWEBSITES =  SW.getSupportedWebsites()
 
 
-from typing import SupportsRound
+
 from Python.Model.Product import Product
 
 from os import getcwd
