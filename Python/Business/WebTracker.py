@@ -15,10 +15,13 @@ from selenium.webdriver import Chrome,ChromeOptions
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver import ActionChains
 
+from Python.Business.Config import Config
+
+
 class WebPrice:
     __chromeDriverPath = getcwd() +  fr"/Driver/chromedriver.exe"
     # TODO CHECK EXISTS CHROME DRIVER
-    def __init__(self, profileName="profile1",headless = False):
+    def __init__(self, profileName="profile1"):
 
         self.options = ChromeOptions()
         self.__profileName = profileName
@@ -26,7 +29,11 @@ class WebPrice:
         self.options.add_argument(f"user-data-dir={self.__profileLoc}")
         self.options.add_argument("--lang=tr")
         self.options.add_argument("--log-level=3")
-        self.options.headless = headless
+        self.myConfig = Config("config.ini")
+        if self.myConfig.get_config('DEFAULT', 'headless') == "True":
+            self.options.headless = True
+        else:
+            self.options.headless = False
 
         self.__startBrowser()
 

@@ -31,6 +31,7 @@ class KuponBruteForceForm(QtWidgets.QMainWindow, Ui_KuponBruteForceForm):
         self.kupon_liste_save_button.clicked.connect(self.kupon_liste_save)
         self.kupon_baslat_button.clicked.connect(self.kupon_baslat)
         self.kupon_liste.itemClicked.connect(self.item_activated_listener)
+        self.kupon_olustur_ai.clicked.connect(self.create_ai_coupon)
 
     def item_activated_listener(self,item):
         #print(item.text())
@@ -105,7 +106,8 @@ class KuponBruteForceForm(QtWidgets.QMainWindow, Ui_KuponBruteForceForm):
         self.kuponBruteForceProcessForm.start_process()
         
 
-
+    def create_ai_coupon(self):
+        pass
 
 
 

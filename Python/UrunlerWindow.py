@@ -174,6 +174,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_UrunlerWindow):
             for _,product in enumerate(self.__productList):
                 guncelTime = time()
                 if (product.get_son_kontrol_zamani() + product.get_check_time_sec() < guncelTime):
+
                     if (product.get_stok_takip() and product.get_fiyat_takip()):
                         #ikiside
                         print(f"{self.return_time()} | {product.get_isim()} güncelleniyor.")
@@ -227,6 +228,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_UrunlerWindow):
 
                         self.notify_product_list_changed(control=True)
                         print(f"{self.return_time()} | {product.get_isim()} güncellendi.")
+
 
     def load_product_from_product_list(self):
         """Productları table widget'a yükle"""
