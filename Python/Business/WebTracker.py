@@ -6,7 +6,7 @@ import Python.Business.SupportedWebsites as SW
 
 SUPPORTEDWEBSITES =  SW.getSupportedWebsites()
 
-
+from time import sleep
 
 from Python.Model.Product import Product
 
@@ -135,6 +135,45 @@ class WebPrice:
                 self.getPage(product.get_link())
                 return (self.browser.find_element_by_css_selector("h1[id='product-name']").text).strip()
 
+
+    def add_product_to_basket(self,product:Product):
+        if product.get_domain() in SUPPORTEDWEBSITES:
+            if product.get_domain() == SUPPORTEDWEBSITES[0]:
+                #SAMM MARKET
+                self.getPage(product.get_link())
+                button = self.browser.find_element_by_css_selector("a[id='addCartBtn']")
+                button.click()
+                # yarım saniye kadar bekle
+                sleep(0.3)
+                # basketSuccess var mı kontrol et varsa true dön
+                try:
+                    self.browser.find_element_by_css_selector("span[class='basketSuccess']")
+                    return True
+                except:
+                    return False
+
+    def get_basket(self,product:Product):
+        if product.get_domain() in SUPPORTEDWEBSITES:
+            if product.get_domain() == SUPPORTEDWEBSITES[0]:
+                #SAMM MARKET
+                self.getPage("https://market.samm.com/sepet") #TODO OTOMATİKLEŞTİR
+
+    def try_coupon(self,product:Product,coupon:str):
+        if product.get_domain() in SUPPORTEDWEBSITES:
+            if product.get_domain() == SUPPORTEDWEBSITES[0]:
+                #SAMM MARKET
+                indirim_kupon_side = self.browser.find_element_by_css_selector("input[id='indirimkuponu']")
+                indirim_kupon_side.send_keys(coupon)
+                indirim_uygula_button = self.browser.find_element_by_css_selector("a[id='indirim']")
+                indirim_uygula_button.click()
+                #row oh
+                sleep(0.5)
+                try:
+                    self.browser.find_element_by_css_selector("div[class='row oh']")
+                    self.browser.find_element_by_css_selector("div[class='pClose close']").click()
+                    return False
+                except:
+                    return True
 
     def __startBrowser(self):
         self.browser = Chrome(executable_path=self.__chromeDriverPath,options=self.options)

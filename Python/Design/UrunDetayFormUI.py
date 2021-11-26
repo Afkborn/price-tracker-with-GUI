@@ -14,13 +14,13 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_UrunDetayForm(object):
     def setupUi(self, UrunDetayForm):
         UrunDetayForm.setObjectName("UrunDetayForm")
-        UrunDetayForm.resize(450, 420)
-        UrunDetayForm.setMaximumSize(QtCore.QSize(450, 420))
+        UrunDetayForm.resize(450, 445)
+        UrunDetayForm.setMaximumSize(QtCore.QSize(450, 450))
         font = QtGui.QFont()
         font.setPointSize(12)
         UrunDetayForm.setFont(font)
         self.formLayoutWidget = QtWidgets.QWidget(UrunDetayForm)
-        self.formLayoutWidget.setGeometry(QtCore.QRect(10, 10, 431, 391))
+        self.formLayoutWidget.setGeometry(QtCore.QRect(10, 10, 431, 421))
         self.formLayoutWidget.setObjectName("formLayoutWidget")
         self.formLayout = QtWidgets.QFormLayout(self.formLayoutWidget)
         self.formLayout.setContentsMargins(0, 0, 0, 0)
@@ -101,6 +101,9 @@ class Ui_UrunDetayForm(object):
         self.urun_grafik_goster_button = QtWidgets.QPushButton(self.formLayoutWidget)
         self.urun_grafik_goster_button.setObjectName("urun_grafik_goster_button")
         self.formLayout.setWidget(10, QtWidgets.QFormLayout.FieldRole, self.urun_grafik_goster_button)
+        self.urun_kupon_bruteforce_button = QtWidgets.QPushButton(self.formLayoutWidget)
+        self.urun_kupon_bruteforce_button.setObjectName("urun_kupon_bruteforce_button")
+        self.formLayout.setWidget(12, QtWidgets.QFormLayout.FieldRole, self.urun_kupon_bruteforce_button)
 
         self.retranslateUi(UrunDetayForm)
         QtCore.QMetaObject.connectSlotsByName(UrunDetayForm)
@@ -122,3 +125,4 @@ class Ui_UrunDetayForm(object):
         self.urun_kaydet_button.setText(_translate("UrunDetayForm", "Kaydet"))
         self.urun_guncelle_button.setText(_translate("UrunDetayForm", "Verileri internetten güncelle"))
         self.urun_grafik_goster_button.setText(_translate("UrunDetayForm", "Fiyat Grafiği Göster"))
+        self.urun_kupon_bruteforce_button.setText(_translate("UrunDetayForm", "Kupon Dene"))

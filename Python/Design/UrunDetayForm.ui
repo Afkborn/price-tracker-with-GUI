@@ -7,13 +7,13 @@
     <x>0</x>
     <y>0</y>
     <width>450</width>
-    <height>420</height>
+    <height>445</height>
    </rect>
   </property>
   <property name="maximumSize">
    <size>
     <width>450</width>
-    <height>420</height>
+    <height>450</height>
    </size>
   </property>
   <property name="font">
@@ -30,7 +30,7 @@
      <x>10</x>
      <y>10</y>
      <width>431</width>
-     <height>391</height>
+     <height>421</height>
     </rect>
    </property>
    <layout class="QFormLayout" name="formLayout">
@@ -185,6 +185,13 @@
      <widget class="QPushButton" name="urun_grafik_goster_button">
       <property name="text">
        <string>Fiyat Grafiği Göster</string>
+      </property>
+     </widget>
+    </item>
+    <item row="12" column="1">
+     <widget class="QPushButton" name="urun_kupon_bruteforce_button">
+      <property name="text">
+       <string>Kupon Dene</string>
       </property>
      </widget>
     </item>

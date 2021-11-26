@@ -32,7 +32,7 @@ from Python.Model.Product import Product
 
 class MainWindow(QtWidgets.QMainWindow, Ui_UrunlerWindow):
     __productList = list()
-
+    KONTROL_EDILSIN_MI = True
     #isim fiyat_takip stok_takip fiyat stok son_kontrol_zamani link
     __table_widget_name = ["İsim","Fiyat Takip","Stok Takip","Fiyat","Stok Durumu","Son Kontrol Zamanı","Link"]
 
@@ -164,64 +164,69 @@ class MainWindow(QtWidgets.QMainWindow, Ui_UrunlerWindow):
             self.load_product_from_product_list()
             self.urunDetayForm.URUN_GUNCELLENDI_MI = False
 
+        if self.urunDetayForm.kuponBruteForceForm.kuponBruteForceProcessForm.ISLEM_BASLADI_MI:
+            self.KONTROL_EDILSIN_MI = False
+        else:
+            self.KONTROL_EDILSIN_MI = True
+
     def kontrol_zamani_kontrol_et(self):
-        for _,product in enumerate(self.__productList):
-            guncelTime = time()
-            if (product.get_son_kontrol_zamani() + product.get_check_time_sec() < guncelTime):
-                if (product.get_stok_takip() and product.get_fiyat_takip()):
-                    #ikiside
-                    print(f"{self.return_time()} | {product.get_isim()} güncelleniyor.")
+        if self.KONTROL_EDILSIN_MI:
+            for _,product in enumerate(self.__productList):
+                guncelTime = time()
+                if (product.get_son_kontrol_zamani() + product.get_check_time_sec() < guncelTime):
+                    if (product.get_stok_takip() and product.get_fiyat_takip()):
+                        #ikiside
+                        print(f"{self.return_time()} | {product.get_isim()} güncelleniyor.")
 
-                    #GÜNCELLEMESİ YAP
-                    price = self.web_browser.getPriceFromProduct(product)
-                    stock = self.web_browser.getStockFromProduct(product)
-                    product.set_fiyat(price)
-                    product.set_stok(stock)
-                    product.set_son_kontrol_zamani(time())
+                        #GÜNCELLEMESİ YAP
+                        price = self.web_browser.getPriceFromProduct(product)
+                        stock = self.web_browser.getStockFromProduct(product)
+                        product.set_fiyat(price)
+                        product.set_stok(stock)
+                        product.set_son_kontrol_zamani(time())
 
 
-                    #DATABASE PRODUCT UPDATE FONKSİYONU YAZ
-                    self.databaseProduct.updatePriceWithID(product.get_id(),product.get_fiyat())
-                    self.databaseProduct.updateStockWithId(product.get_id(),product.get_stok())
-                    self.databaseProduct.add_price_priceList(product)
-                    self.databaseProduct.updateSonKontrolZamaniWithId(product.get_id(),product.get_son_kontrol_zamani())
-                    
-                    self.notify_product_list_changed(control=True)
-                    print(f"{self.return_time()} | {product.get_isim()} güncellendi.")
+                        #DATABASE PRODUCT UPDATE FONKSİYONU YAZ
+                        self.databaseProduct.updatePriceWithID(product.get_id(),product.get_fiyat())
+                        self.databaseProduct.updateStockWithId(product.get_id(),product.get_stok())
+                        self.databaseProduct.add_price_priceList(product)
+                        self.databaseProduct.updateSonKontrolZamaniWithId(product.get_id(),product.get_son_kontrol_zamani())
+                        
+                        self.notify_product_list_changed(control=True)
+                        print(f"{self.return_time()} | {product.get_isim()} güncellendi.")
 
-                elif (product.get_stok_takip()):
-                    #sadece stok
-                    print(f"{self.return_time()} | {product.get_isim()} (sadece stok) güncelleniyor.")
+                    elif (product.get_stok_takip()):
+                        #sadece stok
+                        print(f"{self.return_time()} | {product.get_isim()} (sadece stok) güncelleniyor.")
 
-                    #GÜNCELLEMESİ YAP
-                    stock = self.web_browser.getStockFromProduct(product)
-                    product.set_stok(stock)
-                    product.set_son_kontrol_zamani(time())
+                        #GÜNCELLEMESİ YAP
+                        stock = self.web_browser.getStockFromProduct(product)
+                        product.set_stok(stock)
+                        product.set_son_kontrol_zamani(time())
 
-                    #DATABASE PRODUCT UPDATE FONKSİYONU YAZ
-                    self.databaseProduct.updateStockWithId(product.get_id(),product.get_stok())
-                    self.databaseProduct.updateSonKontrolZamaniWithId(product.get_id(),product.get_son_kontrol_zamani())
+                        #DATABASE PRODUCT UPDATE FONKSİYONU YAZ
+                        self.databaseProduct.updateStockWithId(product.get_id(),product.get_stok())
+                        self.databaseProduct.updateSonKontrolZamaniWithId(product.get_id(),product.get_son_kontrol_zamani())
 
-                    self.notify_product_list_changed(control=True)
-                    print(f"{self.return_time()} | {product.get_isim()} güncellendi.")
+                        self.notify_product_list_changed(control=True)
+                        print(f"{self.return_time()} | {product.get_isim()} güncellendi.")
 
-                elif (product.get_fiyat_takip()):
-                    #sadece fiyat
-                    print(f"{self.return_time()} | {product.get_isim()} (sadece fiyat) güncelleniyor.")
-                    
-                    #GÜNCELLEMESİ YAP
-                    price = self.web_browser.getPriceFromProduct(product)
-                    product.set_fiyat(price)
-                    product.set_son_kontrol_zamani(time())
+                    elif (product.get_fiyat_takip()):
+                        #sadece fiyat
+                        print(f"{self.return_time()} | {product.get_isim()} (sadece fiyat) güncelleniyor.")
+                        
+                        #GÜNCELLEMESİ YAP
+                        price = self.web_browser.getPriceFromProduct(product)
+                        product.set_fiyat(price)
+                        product.set_son_kontrol_zamani(time())
 
-                    #DATABASE PRODUCT UPDATE FONKSİYONU YAZ
-                    self.databaseProduct.updatePriceWithID(product.get_id(),product.get_fiyat())
-                    self.databaseProduct.add_price_priceList(product)
-                    self.databaseProduct.updateSonKontrolZamaniWithId(product.get_id(),product.get_son_kontrol_zamani())
+                        #DATABASE PRODUCT UPDATE FONKSİYONU YAZ
+                        self.databaseProduct.updatePriceWithID(product.get_id(),product.get_fiyat())
+                        self.databaseProduct.add_price_priceList(product)
+                        self.databaseProduct.updateSonKontrolZamaniWithId(product.get_id(),product.get_son_kontrol_zamani())
 
-                    self.notify_product_list_changed(control=True)
-                    print(f"{self.return_time()} | {product.get_isim()} güncellendi.")
-
+                        self.notify_product_list_changed(control=True)
+                        print(f"{self.return_time()} | {product.get_isim()} güncellendi.")
 
     def load_product_from_product_list(self):
         """Productları table widget'a yükle"""

@@ -6,7 +6,8 @@ from urllib.parse import urlparse
 #MODEL
 from Python.Model.Product import Product
 
-
+#SUPPORTED WEBSITES
+import Python.Business.SupportedWebsites as SW
 
 #PyQT5
 from PyQt5.QtCore import QTime
@@ -19,6 +20,8 @@ from Python.Business.Chart import Chart
 
 #UI
 from Python.Design.UrunDetayFormUI import Ui_UrunDetayForm
+from Python.KuponBruteForceForm import KuponBruteForceForm
+
 import Python.MessageBox as MessageBox
 
 class UrunDetayForm(QtWidgets.QMainWindow, Ui_UrunDetayForm):
@@ -28,12 +31,20 @@ class UrunDetayForm(QtWidgets.QMainWindow, Ui_UrunDetayForm):
         super(UrunDetayForm, self).__init__(parent)
         self.setupUi(self)
             #DATABASE
-        self.databaseProduct = DatabaseProduct()
+        
+        self.SW_brute_force = SW.getSupportedWebsitesForBruteForce()
 
+        self.databaseProduct = DatabaseProduct()
+        
+        self.kuponBruteForceForm = KuponBruteForceForm()
+        
         self.urun_guncelle_button.clicked.connect(self.update_product_price_and_stock)
         self.urun_kaydet_button.clicked.connect(self.update_product)
         self.urun_sil_button.clicked.connect(self.delete_product)
         self.urun_grafik_goster_button.clicked.connect(self.show_product_price_chart)
+
+        self.urun_kupon_bruteforce_button.clicked.connect(self.show_kupon_brute_force_form)
+
 
     def setProduct(self,product:Product):
         self.product = product
@@ -41,6 +52,23 @@ class UrunDetayForm(QtWidgets.QMainWindow, Ui_UrunDetayForm):
     def getBrowser(self,browser):
         self.browser = browser
         self.BROWSER_GELDI = True
+        self.kuponBruteForceForm.getBrowser(browser)
+
+
+    def show_kupon_brute_force_form(self):
+        if self.product.get_domain() in self.SW_brute_force:
+
+            #TODO check kuponlar.txt eğer varsa yükle.
+            try:
+                self.kuponBruteForceForm.kupon_liste_temizle()
+                self.kuponBruteForceForm.read_file("kuponlar.txt")
+            except:
+                pass
+            self.kuponBruteForceForm.setProduct(self.product)
+            self.kuponBruteForceForm.show()
+        else:
+            MessageBox.getBasicMB(self,"Hata","Bu site şuan için bruteforce için desteklenmiyor.")
+
 
     def loadProduct(self):
         self.urun_id_edit.setText(str(self.product.get_id()))
@@ -84,7 +112,7 @@ class UrunDetayForm(QtWidgets.QMainWindow, Ui_UrunDetayForm):
                 self.product = self.databaseProduct.get_product_with_id(self.product.get_id())
                 self.loadProduct()
                 self.URUN_GUNCELLENDI_MI = True
-                MessageBox.getBasicMB(self,"Success","Price and stock updated.")
+                MessageBox.getBasicMB(self,"Başarılı","Fiyat ve stok bilgisi güncellendi.")
 
 
     def getDomainFromURL(self,url:str) -> str:
@@ -107,27 +135,22 @@ class UrunDetayForm(QtWidgets.QMainWindow, Ui_UrunDetayForm):
             self.databaseProduct.update_isim_with_id(self.product.get_id(),urun_isim)
         if urun_url != self.product.get_link():
             #update url
-            print("url güncelle")
             self.databaseProduct.update_url_with_id(self.product.get_id(),urun_url)
         if urun_domain != self.product.get_domain():
             #update domain
-            print("domain güncelle")
             self.databaseProduct.update_domain_with_id(self.product.get_id(),urun_domain)
         if kontrol_time_sec != self.product.get_check_time_sec():
             #update kontrol_time
-            print("kontrol time güncelle")
             self.databaseProduct.update_check_time_sec_with_id(self.product.get_id(),kontrol_time_sec)
         if urun_fiyat_takip != self.product.get_fiyat_takip():
             #update fiyat_takip
-            print("fiyat güncelle")
             self.databaseProduct.update_fiyat_takip_with_id(self.product.get_id(),urun_fiyat_takip)
 
         if urun_stok_takip != self.product.get_stok_takip():
             #update stok_takip
-            print("stok güncelle")
             self.databaseProduct.update_stok_takip_with_id(self.product.get_id(),urun_stok_takip)
         self.URUN_GUNCELLENDI_MI = True
-        MessageBox.getBasicMB(self,"Success","Update product is successful.")
+        MessageBox.getBasicMB(self,"Başarılı","Ürün başarıyla güncellendi.")
         self.close()
 
 
@@ -136,7 +159,7 @@ class UrunDetayForm(QtWidgets.QMainWindow, Ui_UrunDetayForm):
     def delete_product(self):
         self.databaseProduct.delete_product_with_id(self.product.get_id())
         self.URUN_GUNCELLENDI_MI = True
-        MessageBox.getBasicMB(self,"Success","Delete successful.")
+        MessageBox.getBasicMB(self,"Başarılı","Ürün başarıyla silindi.")
         self.close()
 
     def show_product_price_chart(self):
