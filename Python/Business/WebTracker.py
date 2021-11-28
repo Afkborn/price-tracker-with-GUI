@@ -10,7 +10,7 @@ from time import sleep
 
 from Python.Model.Product import Product
 
-from os import getcwd
+from os import getcwd, path
 from selenium.webdriver import Chrome,ChromeOptions
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver import ActionChains
@@ -18,9 +18,17 @@ from selenium.webdriver import ActionChains
 from Python.Business.Config import Config
 
 
+def checkFileExists(fileName):
+    if path.isfile(fileName):
+        return True
+    else:
+        return False
+
+
 class WebPrice:
     __chromeDriverPath = getcwd() +  fr"/Driver/chromedriver.exe"
-    # TODO CHECK EXISTS CHROME DRIVER
+    __is_start_browser = False  # browser başlatıldı mı?
+    
     def __init__(self, profileName="profile1"):
 
         self.options = ChromeOptions()
@@ -39,7 +47,24 @@ class WebPrice:
 
     def close(self):
         self.browser.close()
-        
+    
+    def __startBrowser(self):
+        if checkFileExists(self.__chromeDriverPath):
+            self.browser = Chrome(executable_path=self.__chromeDriverPath,options=self.options)
+            self.browser.set_window_position(0,0)
+            #WEB 1008X635 PX
+            self.browser.set_window_size(1024,768)
+            self.__is_start_browser=True
+        else:
+            print("Chrome Driver not found.")
+            self.__is_start_browser=False
+
+    def getPage(self,URL : str):
+        if self.browser.current_url == URL:
+            pass
+        else:
+            self.browser.get(URL)
+
     def str_price_to_float(self,price : str) -> float:
         """string fiyatını float'a çevirme"""
         price = price.replace(".","")
@@ -48,8 +73,8 @@ class WebPrice:
         return price
 
     def getPriceFromProduct(self,product :Product) -> float:
-        if product.get_domain() in SUPPORTEDWEBSITES:
-
+        if product.get_domain() in SUPPORTEDWEBSITES and self.__is_start_browser:
+            
             if product.get_domain() == SUPPORTEDWEBSITES[0]:
                 #SAMM MARKET
                 self.getPage(product.get_link())
@@ -87,7 +112,7 @@ class WebPrice:
             return -1
 
     def getStockFromProduct(self,product:Product) -> bool:
-        if product.get_domain() in SUPPORTEDWEBSITES:
+        if product.get_domain() in SUPPORTEDWEBSITES and self.__is_start_browser:
             if product.get_domain() == SUPPORTEDWEBSITES[0]:
                 #SAMM MARKET
                 self.getPage(product.get_link())
@@ -124,7 +149,7 @@ class WebPrice:
             return False
 
     def getProductName(self,product:Product) -> str:
-        if product.get_domain() in SUPPORTEDWEBSITES:
+        if product.get_domain() in SUPPORTEDWEBSITES and self.__is_start_browser:
             if product.get_domain() == SUPPORTEDWEBSITES[0]:
                 #SAMM MARKET
                 self.getPage(product.get_link())    
@@ -142,9 +167,8 @@ class WebPrice:
                 self.getPage(product.get_link())
                 return (self.browser.find_element_by_css_selector("h1[id='product-name']").text).strip()
 
-
     def add_product_to_basket(self,product:Product):
-        if product.get_domain() in SUPPORTEDWEBSITES:
+        if product.get_domain() in SUPPORTEDWEBSITES and self.__is_start_browser:
             if product.get_domain() == SUPPORTEDWEBSITES[0]:
                 #SAMM MARKET
                 self.getPage(product.get_link())
@@ -160,13 +184,13 @@ class WebPrice:
                     return False
 
     def get_basket(self,product:Product):
-        if product.get_domain() in SUPPORTEDWEBSITES:
+        if product.get_domain() in SUPPORTEDWEBSITES and self.__is_start_browser:
             if product.get_domain() == SUPPORTEDWEBSITES[0]:
                 #SAMM MARKET
                 self.getPage("https://market.samm.com/sepet") #TODO OTOMATİKLEŞTİR
 
     def try_coupon(self,product:Product,coupon:str):
-        if product.get_domain() in SUPPORTEDWEBSITES:
+        if product.get_domain() in SUPPORTEDWEBSITES and self.__is_start_browser:
             if product.get_domain() == SUPPORTEDWEBSITES[0]:
                 #SAMM MARKET
                 indirim_kupon_side = self.browser.find_element_by_css_selector("input[id='indirimkuponu']")
@@ -182,19 +206,7 @@ class WebPrice:
                 except:
                     return True
 
-    def __startBrowser(self):
-        self.browser = Chrome(executable_path=self.__chromeDriverPath,options=self.options)
-        self.browser.set_window_position(0,0)
-        #WEB 1008X635 PX
-        self.browser.set_window_size(1024,768)
 
-    def getPage(self,URL : str):
-        if self.browser.current_url == URL:
-            pass
-        else:
-            self.browser.get(URL)
-
-    
     def __clickXY(self,x,y):
         """tarayıcıda istenilen yere tıklamak için kullanılıyor"""
         action = ActionChains(self.browser)
