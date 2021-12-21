@@ -32,6 +32,7 @@ class UrunEkleForm(QtWidgets.QMainWindow,Ui_UrunEkleForm):
         self.urun_url_edit.textChanged.connect(self.url_textChanged_listener)
         self.urun_otomatik_isim_cb.stateChanged.connect(self.urun_otomatik_isim_cb_stateChanged)
         self.databaseProduct = DatabaseProduct()
+        self.urun_birim_cb.addItems(SupportedWebsites.SUPPORTEDUNIT)
 
     def getDomainFromURL(self,url:str) -> str:
         """Verilen str türündeki URL adresinin hangi domaine ait olduğunu döner"""
@@ -70,10 +71,12 @@ class UrunEkleForm(QtWidgets.QMainWindow,Ui_UrunEkleForm):
         kontrol_time_sec = kontrol_time.hour * 3600 + kontrol_time.minute * 60 + kontrol_time.second
         urun_fiyat_takip = self.urun_fiyat_takip_cb.isChecked()
         urun_stok_takip = self.urun_stok_takip_cb.isChecked()
-    
+        urun_birim = self.urun_birim_cb.currentText()
+
+        
         self.urun_domain_edit.setText(self.getDomainFromURL(self.urun_url_edit.text()))
 
-        myProduct = Product(isim=urun_isim,link=urun_url,check_time_sec=kontrol_time_sec,fiyat_takip=urun_fiyat_takip,stok_takip=urun_stok_takip,domain=urun_domain)
+        myProduct = Product(isim=urun_isim,link=urun_url,check_time_sec=kontrol_time_sec,fiyat_takip=urun_fiyat_takip,stok_takip=urun_stok_takip,domain=urun_domain,birim=urun_birim)
         #TODO ürünün değerlerini kontrol et
         if self.check_relevance(myProduct):
 

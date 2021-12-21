@@ -9,7 +9,7 @@ from Python.Model.Product import Product
 
 
 
-CREATETABLEPRODUCT = """CREATE TABLE IF NOT EXISTS products (id	INTEGER PRIMARY KEY,isim TEXT NOT NULL,link TEXT NOT NULL,check_time_sec INTEGER NOT NULL,fiyat_takip TEXT NOT NULL, stok_takip TEXT NOT NULL,fiyat INTEGER NOT NULL,stok TEXT NOT NULL,son_kontrol_zamani INTEGER NOT NULL, domain TEXT NOT NULL)"""
+CREATETABLEPRODUCT = """CREATE TABLE IF NOT EXISTS products (id	INTEGER PRIMARY KEY,isim TEXT NOT NULL,link TEXT NOT NULL,check_time_sec INTEGER NOT NULL,fiyat_takip TEXT NOT NULL, stok_takip TEXT NOT NULL,fiyat INTEGER NOT NULL,stok TEXT NOT NULL,son_kontrol_zamani INTEGER NOT NULL, domain TEXT NOT NULL, birim TEXT)"""
 # CREATETABLEPRICES = """CREATE TABLE IF NOT EXISTS prices (id INTEGER NOT NULL, priceTime INTEGER NOT NULL, price INTEGER NOT NULL)"""
 # CREATETABLESTOCKS = """CREATE TABLE IF NOT EXISTS stocks (id INTEGER NOT NULL, stockTime INTEGER NOT NULL, stock TEXT NOT NULL)"""
 
@@ -73,7 +73,10 @@ class DatabaseProduct:
             for i in allDb:
                 
                 #id,isim,link,check_time_sec,fiyat_takip,stok_takip,fiyat,stok,son_kontrol_zamani,domain
-                id, isim, link, check_time_sec, fiyat_takip, stok_takip, fiyat, stok, son_kontrol_zamani, domain = i
+                id, isim, link, check_time_sec, fiyat_takip, stok_takip, fiyat, stok, son_kontrol_zamani, domain, birim = i
+
+                if birim == None:
+                    self.update_birim_with_id(id, "TL")
 
                 if stok =="True":
                     stok=True
@@ -95,7 +98,7 @@ class DatabaseProduct:
                 if fiyat == "None":
                     fiyat = None
                 
-                myProduct = Product(id,isim,link,check_time_sec,fiyat_takip,stok_takip,fiyat,stok,son_kontrol_zamani,domain)
+                myProduct = Product(id,isim,link,check_time_sec,fiyat_takip,stok_takip,fiyat,stok,son_kontrol_zamani,domain,birim)
 
                 self.__products.append(myProduct)
             self.__isLoaded = True
@@ -141,7 +144,7 @@ class DatabaseProduct:
         self.im = self.db.cursor()
         # id,isim,link,check_time_sec,fiyat_takip,stok_takip,fiyat,stok,son_kontrol_zamani,domain
         # get_id get_isim get_link get_check_time_sec get_fiyat_takip get_stok_takip get_fiyat get_stok get_son_kontrol_zamani get_domain
-        KEY = f"isim,link,check_time_sec,fiyat_takip,stok_takip,fiyat,stok,son_kontrol_zamani,domain"
+        KEY = f"isim,link,check_time_sec,fiyat_takip,stok_takip,fiyat,stok,son_kontrol_zamani,domain,birim"
         VALUES = f"""
         '{product.get_isim()}',
         '{product.get_link()}',
@@ -151,7 +154,8 @@ class DatabaseProduct:
         '{product.get_fiyat()}',
         '{product.get_stok()}',
         '{product.get_son_kontrol_zamani()}',
-        '{product.get_domain()}'
+        '{product.get_domain()}',
+        '{product.get_birim()}'
         """
         self.im.execute(f"INSERT INTO products({KEY}) VALUES({VALUES})")
         product.set_id(self.im.lastrowid)
@@ -170,7 +174,7 @@ class DatabaseProduct:
         self.im = self.db.cursor()
         self.im.execute(f"SELECT * FROM products WHERE id = {id}")
         product = self.im.fetchone()
-        id, isim, link, check_time_sec, fiyat_takip, stok_takip, fiyat, stok, son_kontrol_zamani, domain = product
+        id, isim, link, check_time_sec, fiyat_takip, stok_takip, fiyat, stok, son_kontrol_zamani, domain, birim = product
         if stok =="True":
             stok=True
         elif stok == "False":
@@ -190,7 +194,7 @@ class DatabaseProduct:
 
         if fiyat == "None":
             fiyat = None
-        myProduct = Product(id,isim,link,check_time_sec,fiyat_takip,stok_takip,fiyat,stok,son_kontrol_zamani,domain)
+        myProduct = Product(id,isim,link,check_time_sec,fiyat_takip,stok_takip,fiyat,stok,son_kontrol_zamani,domain,birim)
         self.db.close()
         return myProduct
 
@@ -284,6 +288,14 @@ class DatabaseProduct:
             sql_update_query = f"""Update products set stok_takip = 'True' where id = {id}"""
         else:
             sql_update_query = f"""Update products set stok_takip = 'False' where id = {id}"""
+        self.im.execute(sql_update_query)
+        self.db.commit()
+        self.db.close()
+    
+    def update_birim_with_id(self,id:int, birim : str):
+        self.db = sql.connect(self.__dbLoc)
+        self.im = self.db.cursor()
+        sql_update_query = f"""Update products set birim = '{birim}' where id = {id}"""
         self.im.execute(sql_update_query)
         self.db.commit()
         self.db.close()

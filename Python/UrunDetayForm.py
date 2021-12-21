@@ -34,7 +34,7 @@ class UrunDetayForm(QtWidgets.QMainWindow, Ui_UrunDetayForm):
             #DATABASE
         
         self.SW_brute_force = SW.getSupportedWebsitesForBruteForce()
-
+        self.urun_birim_cb.addItems(SW.SUPPORTEDUNIT)
         self.databaseProduct = DatabaseProduct()
         
         self.kuponBruteForceForm = KuponBruteForceForm()
@@ -48,6 +48,7 @@ class UrunDetayForm(QtWidgets.QMainWindow, Ui_UrunDetayForm):
 
         self.urun_kupon_bruteforce_button.clicked.connect(self.show_kupon_brute_force_form)
         self.urun_export_button.clicked.connect(self.show_urun_disa_aktar_form)
+        
 
     def show_urun_disa_aktar_form(self):
         self.urunDisaAktarForm.setProduct(self.product)
@@ -81,8 +82,8 @@ class UrunDetayForm(QtWidgets.QMainWindow, Ui_UrunDetayForm):
         self.urun_id_edit.setText(str(self.product.get_id()))
         self.urun_domain_edit.setText(self.product.get_domain())
         self.urun_ismi_edit.setText(self.product.get_isim())
-        self.urun_url_edit.setText(self.product.get_link())
-
+        self.urun_url_edit.setText(self.product.get_link()) 
+        self.urun_birim_cb.setCurrentText(self.product.get_birim())
 
         myTime = strftime('%H:%M:%S', gmtime(self.product.get_check_time_sec())) # second to hour:minute:second
         myTime = QTime.fromString(str(myTime), 'hh:mm:ss') # string to QTime
@@ -135,8 +136,9 @@ class UrunDetayForm(QtWidgets.QMainWindow, Ui_UrunDetayForm):
         kontrol_time_sec = kontrol_time.hour * 3600 + kontrol_time.minute * 60 + kontrol_time.second
         urun_fiyat_takip = self.urun_fiyat_takip_cb.isChecked()
         urun_stok_takip = self.urun_stok_takip_cb.isChecked()  
-        
+        urun_birim = self.urun_birim_cb.currentText()
        
+
         if urun_isim != self.product.get_isim():
             #update isim
             self.databaseProduct.update_isim_with_id(self.product.get_id(),urun_isim)
@@ -156,6 +158,10 @@ class UrunDetayForm(QtWidgets.QMainWindow, Ui_UrunDetayForm):
         if urun_stok_takip != self.product.get_stok_takip():
             #update stok_takip
             self.databaseProduct.update_stok_takip_with_id(self.product.get_id(),urun_stok_takip)
+        
+        if urun_birim != self.product.get_birim():
+            #update birim
+            self.databaseProduct.update_birim_with_id(self.product.get_id(),urun_birim)
         self.URUN_GUNCELLENDI_MI = True
         MessageBox.getBasicMB(self,"Başarılı","Ürün başarıyla güncellendi.")
         self.close()

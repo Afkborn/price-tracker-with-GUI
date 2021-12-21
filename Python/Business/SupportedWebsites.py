@@ -8,6 +8,7 @@ SUPPORTEDWEBSITES = [
     Website("Hepsi Burada", "www.hepsiburada.com","hepsi",True,False)
 ]
 
+SUPPORTEDUNIT = ["TL","USD","EUR","GBP","JPY","CNY","AUD","CAD","CHF","DKK","HKD","INR","KRW","MYR","NZD","SEK","SGD","THB","ZAR"]
 
 def getSupportedWebsites() -> list:
     """Return list of supported website for tracking"""

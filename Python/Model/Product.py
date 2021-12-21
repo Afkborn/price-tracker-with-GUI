@@ -10,6 +10,7 @@ class Product:
     stok:bool=None, #stok durumu
     son_kontrol_zamani:float=None, #son kontrol zamanı
     domain:str=None, #domain
+    birim:str = None
 
     ) -> None:
         self.__id = id
@@ -22,10 +23,11 @@ class Product:
         self.__stok = stok
         self.__son_kontrol_zamani = son_kontrol_zamani
         self.__domain = domain
+        self.__birim = birim
 
  
     def __str__(self) -> str:
-        return f"Product(id={self.__id},isim={self.__isim},link={self.__link},check_time_sec={self.__check_time_sec},fiyat_takip={self.__fiyat_takip},stok_takip={self.__stok_takip},fiyat={self.__fiyat},stok={self.__stok},son_kontrol_zamani={self.__son_kontrol_zamani},domain={self.__domain})"
+        return f"Product(id={self.__id},isim={self.__isim},link={self.__link},check_time_sec={self.__check_time_sec},fiyat_takip={self.__fiyat_takip},stok_takip={self.__stok_takip},fiyat={self.__fiyat},stok={self.__stok},son_kontrol_zamani={self.__son_kontrol_zamani},domain={self.__domain},birim={self.__birim})"
 
     def get_id(self):
         return self.__id
@@ -47,6 +49,16 @@ class Product:
         return self.__son_kontrol_zamani
     def get_domain(self):
         return self.__domain
+    def get_birim(self):
+        if self.__birim == "TL":
+            return "₺"
+        elif self.__birim == "USD":
+            return "$"
+        elif self.__birim == "EUR":
+            return "€"
+        else:
+            return self.__birim
+        
 
     def set_id(self,id):
         self.__id = id
@@ -68,6 +80,8 @@ class Product:
         self.__son_kontrol_zamani = son_kontrol_zamani
     def set_domain(self,domain):
         self.__domain = domain
+    def set_birim(self,birim):
+        self.__birim = birim
 
 
         
