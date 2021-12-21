@@ -19,10 +19,18 @@ class Chart:
         self.date_and_priceses_list = self.databaseProduct.get_price_and_date_from_priceses(product)
 
         #[(1637335334.2175646, 0), (1637335593.4976118, 0), (1637335599.9137168, 0), (1637336532.1519344, 0), (1637336673.8786097, 0), (1637337324.1453562, 0), (1637338057.8657577, 0), (1637340169.720858, 0)]
+        son_eklenen_fiyat = 0
         for date_and_price in self.date_and_priceses_list:
-            self.date.append(date_and_price[0])
-            self.price.append(date_and_price[1])
+            if son_eklenen_fiyat == date_and_price[1]:
+                continue
+            else:
+                self.date.append(date_and_price[0])
+                self.price.append(date_and_price[1])
+                son_eklenen_fiyat = date_and_price[1]
+
+
         
+
         self.dateType = dateType
         if self.dateType == "epoch":
             self.convertDate()
@@ -31,9 +39,11 @@ class Chart:
 
     def convertDate(self):
         for index, i in enumerate(self.date):
-            self.date[index] =  datetime.fromtimestamp(i).strftime('%H:%M:%S')
+            self.date[index] =  datetime.fromtimestamp(i).strftime('%H:%M:%S %d-%m')
     
     def create_plot(self):
+
+
         plt.plot(self.date, self.price)
         plt.show()
 

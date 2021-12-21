@@ -21,6 +21,7 @@ from Python.Business.Chart import Chart
 #UI
 from Python.Design.UrunDetayFormUI import Ui_UrunDetayForm
 from Python.KuponBruteForceForm import KuponBruteForceForm
+from Python.UrunDisaAktarForm import UrunDisaAktarForm
 
 import Python.MessageBox as MessageBox
 
@@ -37,6 +38,8 @@ class UrunDetayForm(QtWidgets.QMainWindow, Ui_UrunDetayForm):
         self.databaseProduct = DatabaseProduct()
         
         self.kuponBruteForceForm = KuponBruteForceForm()
+        self.urunDisaAktarForm = UrunDisaAktarForm()
+
         
         self.urun_guncelle_button.clicked.connect(self.update_product_price_and_stock)
         self.urun_kaydet_button.clicked.connect(self.update_product)
@@ -44,7 +47,11 @@ class UrunDetayForm(QtWidgets.QMainWindow, Ui_UrunDetayForm):
         self.urun_grafik_goster_button.clicked.connect(self.show_product_price_chart)
 
         self.urun_kupon_bruteforce_button.clicked.connect(self.show_kupon_brute_force_form)
+        self.urun_export_button.clicked.connect(self.show_urun_disa_aktar_form)
 
+    def show_urun_disa_aktar_form(self):
+        self.urunDisaAktarForm.setProduct(self.product)
+        self.urunDisaAktarForm.show()
 
     def setProduct(self,product:Product):
         self.product = product
