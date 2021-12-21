@@ -34,6 +34,7 @@ class Ui_UrunDisaAktarForm(object):
         self.kaydet_button.setObjectName("kaydet_button")
         self.gridLayout.addWidget(self.kaydet_button, 2, 1, 1, 1)
         self.loc_edit = QtWidgets.QLineEdit(self.gridLayoutWidget)
+        self.loc_edit.setReadOnly(True)
         self.loc_edit.setObjectName("loc_edit")
         self.gridLayout.addWidget(self.loc_edit, 0, 1, 1, 1)
         self.label = QtWidgets.QLabel(self.gridLayoutWidget)
