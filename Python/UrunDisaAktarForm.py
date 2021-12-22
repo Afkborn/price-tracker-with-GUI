@@ -16,6 +16,7 @@ class UrunDisaAktarForm(QtWidgets.QMainWindow,Ui_UrunDisaAktarForm):
     content = "JSON"
     selected_format = "json"
     location = ""
+    isOneProduct = False
     def __init__(self,parent=None):
         super(UrunDisaAktarForm,self).__init__(parent)
         self.setupUi(self)
@@ -27,7 +28,13 @@ class UrunDisaAktarForm(QtWidgets.QMainWindow,Ui_UrunDisaAktarForm):
 
     def setProduct(self,product:Product):
         self.product = product
-
+        self.isOneProduct = True
+        self.setWindowTitle("Dışa Aktar | Ürün")
+    
+    def setAll(self):
+        self.isOneProduct = False
+        
+        self.setWindowTitle("Dışa Aktar | Database")
     
     def load_supported_export_formats(self):
         supported_formats = EP.SUPPORTED_EXPORT_FORMATS
@@ -36,15 +43,15 @@ class UrunDisaAktarForm(QtWidgets.QMainWindow,Ui_UrunDisaAktarForm):
         self.close()
     
     def export_product(self):
-        if self.content == "CSV":
-            EP.export_product_to_csv(self.product,self.location)
-        elif self.content == "EXCEL":
-            EP.export_product_to_excel(self.product,self.location)
-        elif self.content == "JSON":
+        if self.content == "JSON" and self.isOneProduct:
             if self.location == EP.export_product_to_json(self.product,self.location):
-                MB.getBasicMB(self,"Urun Disa Aktarıldı","Urun Disa Aktarıldı")
+                MB.getBasicMB(self,"Urun Disa Aktarıldı",f"Urun Disa Aktarıldı Location: {self.location}")
                 self.close()
-                
+        elif self.content == "JSON" and not self.isOneProduct:
+            if self.location == EP.export_all_products_to_json(self.location):
+                MB.getBasicMB(self,"Urunler Disa Aktarıldı",f"Urunler Disa Aktarıldı Location: {self.location}")
+                self.close()
+                 
 
     
     def on_combobox_changed(self, content):
@@ -57,9 +64,13 @@ class UrunDisaAktarForm(QtWidgets.QMainWindow,Ui_UrunDisaAktarForm):
         self.content = content
 
     def get_file_location(self):
+        
         options = QFileDialog.Options()
         options |= QFileDialog.DontUseNativeDialog
-        product_fileName = f"product_{self.product.get_id()}.{self.selected_format}"
+        if self.isOneProduct:
+            product_fileName = f"product_{self.product.get_id()}.{self.selected_format}"
+        else:
+            product_fileName = f"database.{self.selected_format}"
         fileName, _ = QFileDialog.getSaveFileName(self,"Export Product",product_fileName,f"{self.content} (*.{self.selected_format})", options=options)
         if fileName:
             self.location = fileName

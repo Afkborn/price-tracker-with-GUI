@@ -24,6 +24,15 @@ class Product:
         self.__son_kontrol_zamani = son_kontrol_zamani
         self.__domain = domain
         self.__birim = birim
+        
+        if self.__birim == "TL":
+            self.__birimSimge  = "₺"
+        elif self.__birim == "USD":
+            self.__birimSimge  = "$"
+        elif self.__birim == "EUR":
+            self.__birimSimge  = "€"
+        else:
+            self.__birimSimge = self.__birim
 
  
     def __str__(self) -> str:
@@ -50,14 +59,10 @@ class Product:
     def get_domain(self):
         return self.__domain
     def get_birim(self):
-        if self.__birim == "TL":
-            return "₺"
-        elif self.__birim == "USD":
-            return "$"
-        elif self.__birim == "EUR":
-            return "€"
-        else:
-            return self.__birim
+        return self.__birim
+    def get_birim_simge(self):
+        return self.__birimSimge
+        
         
 
     def set_id(self,id):

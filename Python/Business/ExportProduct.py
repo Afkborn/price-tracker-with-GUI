@@ -1,29 +1,25 @@
+
+#Model
 from Python.Model.Product import Product
-from datetime import datetime
-import json
+
+
+
+
+
 
 
 #Business
 from Python.Business.DatabaseProduct import DatabaseProduct
+import json
+from datetime import datetime
 
 
 SUPPORTED_EXPORT_FORMATS= ["JSON"]
 
 
-    # id:int=None, # id
-    # isim:str=None, #ürün ismi
-    # link:str=None, # ürün linki
-    # check_time_sec:int=None, #kontrol zamanı (saniye)
-    # fiyat_takip:bool=None, #fiyat takip
-    # stok_takip:bool=None, #stok takip
-    # fiyat:float=None,  #ürün fiyatı
-    # stok:bool=None, #stok durumu
-    # son_kontrol_zamani:float=None, #son kontrol zamanı
-    # domain:str=None, #domain
-
-
 
 def get_gecmis_fiyatlar(product:Product):
+    """get date and price of the product"""
     date = []
     price=[]
     databaseProduct = DatabaseProduct()
@@ -45,6 +41,7 @@ def get_gecmis_fiyatlar(product:Product):
     return returnList
 
 def export_product_to_json(product:Product,location:str):
+    """export products to json file\n product is the product object, location is the path of the file"""
     son_kontrol_zamani = datetime.utcfromtimestamp(product.get_son_kontrol_zamani()).strftime('%Y-%m-%d %H:%M:%S')
 
     gecmis_fiyatlar = get_gecmis_fiyatlar(product)
@@ -60,11 +57,42 @@ def export_product_to_json(product:Product,location:str):
         "stok":product.get_stok(),
         "son_kontrol_zamani":son_kontrol_zamani,
         "domain":product.get_domain(),
+        "birim":product.get_birim(),
         "gecmis_fiyatlar":gecmis_fiyatlar
     }
     jsonObject = json.dumps(product_json)
-    with open(location, "w") as outfile:
+    with open(location, "w",encoding="utf-8") as outfile:
         outfile.write(jsonObject)
         return location
 
 
+def export_all_products_to_json(location:str):
+    """export all products to json file\nlocation is the path of the file""" 
+    databaseProduct = DatabaseProduct()
+    all_products = databaseProduct.loadDB()
+
+    jsonObjectList = []
+    for product in all_products:
+        son_kontrol_zamani = datetime.utcfromtimestamp(product.get_son_kontrol_zamani()).strftime('%Y-%m-%d %H:%M:%S')
+        
+        gecmis_fiyatlar = get_gecmis_fiyatlar(product)
+        product_json = {
+        "id":product.get_id(),
+        "isim":product.get_isim(),
+        "link":product.get_link(),
+        "check_time_sec":product.get_check_time_sec(),
+        "fiyat_takip":product.get_fiyat_takip(),
+        "stok_takip":product.get_stok_takip(),
+        "fiyat":product.get_fiyat(),
+        "stok":product.get_stok(),
+        "son_kontrol_zamani":son_kontrol_zamani,
+        "domain":product.get_domain(),
+        "birim":product.get_birim(),
+        "gecmis_fiyatlar":gecmis_fiyatlar
+        }
+        jsonObjectList.append(product_json)
+
+    jsonObject = json.dumps(jsonObjectList)
+    with open(location, "w",encoding="utf-8") as outfile:
+        outfile.write(jsonObject)
+        return location

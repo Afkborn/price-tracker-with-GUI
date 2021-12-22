@@ -248,7 +248,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_UrunlerWindow):
             if product.get_fiyat() == None:
                 self.product_table_widget.setItem(index,3,QtWidgets.QTableWidgetItem("None"))
             else:
-                urunFiyat = f"{product.get_fiyat()} {product.get_birim()}"
+                urunFiyat = f"{product.get_fiyat()} {product.get_birim_simge()}"
                 self.product_table_widget.setItem(index,3,QtWidgets.QTableWidgetItem(urunFiyat))
 
 
