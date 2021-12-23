@@ -79,6 +79,7 @@ class UrunDetayForm(QtWidgets.QMainWindow, Ui_UrunDetayForm):
 
 
     def loadProduct(self):
+        print(self.product)
         self.urun_id_edit.setText(str(self.product.get_id()))
         self.urun_domain_edit.setText(self.product.get_domain())
         self.urun_ismi_edit.setText(self.product.get_isim())
@@ -97,8 +98,12 @@ class UrunDetayForm(QtWidgets.QMainWindow, Ui_UrunDetayForm):
 
         if self.product.get_fiyat_takip():
             self.urun_fiyat_takip_cb.setChecked(True)
+        else:
+            self.urun_fiyat_takip_cb.setChecked(False)
         if self.product.get_stok_takip():
             self.urun_stok_takip_cb.setChecked(True)
+        else:
+            self.urun_stok_takip_cb.setChecked(False)
     
     def update_product_price_and_stock(self):
         if self.BROWSER_GELDI:
