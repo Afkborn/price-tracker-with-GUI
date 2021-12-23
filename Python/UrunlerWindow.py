@@ -25,6 +25,7 @@ import Python.MessageBox as MessageBox
 #Business
 from Python.Business.DatabaseProduct import DatabaseProduct
 from Python.Business.WebTracker import WebPrice
+from Python.Business.Chart import Chart
 
 #MODEL
 from Python.Model.Product import Product
@@ -34,7 +35,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_UrunlerWindow):
     __productList = list()
     KONTROL_EDILSIN_MI = True
     #isim fiyat_takip stok_takip fiyat stok son_kontrol_zamani link
-    __table_widget_name = ["İsim","Fiyat Takip","Stok Takip","Fiyat","Stok Durumu","Son Kontrol Zamanı","Link"]
+    __table_widget_name = ["İsim","Fiyat Takip","Stok Takip","Fiyat","Stok Durumu","Son Kontrol Zamanı","Fiyat Grafiği","Link"]
 
     def __init__(self, *args, obj=None, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
@@ -80,7 +81,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_UrunlerWindow):
         self.load_product_table_attributes()
         self.load_product_from_product_list()
 
-
+        self.product_table_widget.doubleClicked.connect(self.get_clicked_product)
 
         self.detay_button.clicked.connect(self.showProductDetailWindowWithProduct)
         self.actionDesteklenen_Siteler.triggered.connect(self.showDesteklenenSitelerForm)
@@ -229,6 +230,20 @@ class MainWindow(QtWidgets.QMainWindow, Ui_UrunlerWindow):
                         self.notify_product_list_changed(control=True)
                         print(f"{self.return_time()} | {product.get_isim()} güncellendi.")
 
+    def get_clicked_product(self,mi):
+        
+        row = mi.row()
+        column = mi.column()
+        print(f"row = {row} column = {column}")
+        clicked_product = self.__productList[row]
+        if column == 6:
+            myChart = Chart(clicked_product)
+            myChart.create_plot()
+        else:
+            self.urunDetayForm.show()
+            self.urunDetayForm.setProduct(clicked_product)
+            self.urunDetayForm.loadProduct()
+
 
     def load_product_from_product_list(self):
         """Productları table widget'a yükle"""
@@ -262,5 +277,5 @@ class MainWindow(QtWidgets.QMainWindow, Ui_UrunlerWindow):
             my_time = datetime.fromtimestamp(product.get_son_kontrol_zamani()).strftime(' %H:%M:%S %Y-%m-%d')
 
             self.product_table_widget.setItem(index,5,QtWidgets.QTableWidgetItem(my_time))
-            self.product_table_widget.setItem(index,6,QtWidgets.QTableWidgetItem(product.get_link()))
-
+            self.product_table_widget.setItem(index,7,QtWidgets.QTableWidgetItem(product.get_link()))
+            self.product_table_widget.setItem(index,6,QtWidgets.QTableWidgetItem("Göster"))
