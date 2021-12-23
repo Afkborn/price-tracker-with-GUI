@@ -16,7 +16,7 @@ from PyQt5 import QtWidgets
 #Business
 from Python.Business.DatabaseProduct import DatabaseProduct
 from Python.Business.Chart import Chart
-
+import Python.Business.Exception as Exc
 
 #UI
 from Python.Design.UrunDetayFormUI import Ui_UrunDetayForm
@@ -177,7 +177,10 @@ class UrunDetayForm(QtWidgets.QMainWindow, Ui_UrunDetayForm):
 
     def show_product_price_chart(self):
         myChart = Chart(self.product)
-        myChart.create_plot()
+        try:
+            myChart.create_plot()
+        except Exc.MissingData:
+            MessageBox.getBasicMB(self, "Hata","Ürünün fiyat ve stok grafiği çizilemedi.")
 
 
 

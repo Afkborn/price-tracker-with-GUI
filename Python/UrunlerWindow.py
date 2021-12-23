@@ -26,7 +26,7 @@ import Python.MessageBox as MessageBox
 from Python.Business.DatabaseProduct import DatabaseProduct
 from Python.Business.WebTracker import WebPrice
 from Python.Business.Chart import Chart
-
+import Python.Business.Exception as Exc
 #MODEL
 from Python.Model.Product import Product
 
@@ -234,11 +234,14 @@ class MainWindow(QtWidgets.QMainWindow, Ui_UrunlerWindow):
         
         row = mi.row()
         column = mi.column()
-        print(f"row = {row} column = {column}")
+        # print(f"row = {row} column = {column}")
         clicked_product = self.__productList[row]
         if column == 6:
             myChart = Chart(clicked_product)
-            myChart.create_plot()
+            try:
+                myChart.create_plot()
+            except Exc.MissingData:
+                MessageBox.getBasicMB(self, "Hata","Ürünün fiyat ve stok grafiği çizilemedi.")
         else:
             self.urunDetayForm.show()
             self.urunDetayForm.setProduct(clicked_product)
