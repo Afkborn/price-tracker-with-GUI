@@ -176,7 +176,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_UrunlerWindow):
                 guncelTime = time()
                 if (product.get_son_kontrol_zamani() + product.get_check_time_sec() < guncelTime):
 
-                    if (product.get_stok_takip() and product.get_fiyat_takip()):
+                    if (product.get_stok_takip() and product.get_fiyat_takip()): # stok ve fiyat takip ediliyorsa
                         #ikiside
                         print(f"{self.return_time()} | {product.get_isim()} güncelleniyor.")
 
@@ -197,7 +197,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_UrunlerWindow):
                         self.notify_product_list_changed(control=True)
                         print(f"{self.return_time()} | {product.get_isim()} güncellendi.")
 
-                    elif (product.get_stok_takip()):
+                    elif (product.get_stok_takip()): # stok takip ediliyorsa
                         #sadece stok
                         print(f"{self.return_time()} | {product.get_isim()} (sadece stok) güncelleniyor.")
 
@@ -213,7 +213,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_UrunlerWindow):
                         self.notify_product_list_changed(control=True)
                         print(f"{self.return_time()} | {product.get_isim()} güncellendi.")
 
-                    elif (product.get_fiyat_takip()):
+                    elif (product.get_fiyat_takip()): # fiyat takip ediliyorsa
+
                         #sadece fiyat
                         print(f"{self.return_time()} | {product.get_isim()} (sadece fiyat) güncelleniyor.")
                         
@@ -229,6 +230,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_UrunlerWindow):
 
                         self.notify_product_list_changed(control=True)
                         print(f"{self.return_time()} | {product.get_isim()} güncellendi.")
+                    
+                    QTest.qWait(100)
+
 
     def get_clicked_product(self,mi):
         
