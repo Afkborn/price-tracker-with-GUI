@@ -4,6 +4,8 @@ from os import getcwd
 from time import strftime,time
 from datetime import date, datetime
 from webbrowser import open
+import logging
+
 
 #PyQT5
 from PyQt5 import QtWidgets, uic
@@ -26,9 +28,12 @@ import Python.MessageBox as MessageBox
 from Python.Business.DatabaseProduct import DatabaseProduct
 from Python.Business.WebTracker import WebPrice
 from Python.Business.Chart import Chart
+from Python.Business import Compatibility
 import Python.Business.Exception as Exc
+
 #MODEL
 from Python.Model.Product import Product
+
 
 
 class MainWindow(QtWidgets.QMainWindow, Ui_UrunlerWindow):
@@ -56,7 +61,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_UrunlerWindow):
         self.databaseProduct = DatabaseProduct()
 
         #WEB
-        self.web_browser = WebPrice("profile1")
+        self.web_browser = WebPrice("profile1", Compatibility.get_chrome_driver_loc())
 
 
         #FORMS
@@ -91,16 +96,20 @@ class MainWindow(QtWidgets.QMainWindow, Ui_UrunlerWindow):
 
     def showSettingsWindow(self):
         self.ayarlarForm.show()
+        logging.info("Ayarlar formu açıldı.")
 
     def showAboutWindow(self):
         self.hakkimdaForm.show()
+        logging.info("Hakkımda formu açıldı.")
 
     def showNewProductWindow(self):
         self.urunEkleForm.show()
+        logging.info("Yeni Ürün formu açıldı.")
 
     def showUrunGuncelleniyorForm(self,productName:str):
         self.urunGuncelleniyorForm.show()
         self.urunGuncelleniyorForm.changeLabelText(productName)
+        logging.info(f"Ürün güncelleniyor formu açıldı. Product: {productName}")
 
     def showProductDetailWindowWithProduct(self):
         selected = self.product_table_widget.currentRow()
@@ -114,18 +123,22 @@ class MainWindow(QtWidgets.QMainWindow, Ui_UrunlerWindow):
     def showDesteklenenSitelerForm(self):
         self.desteklenenSitelerForm.printDesteklenenSiteler()
         self.desteklenenSitelerForm.show()
+        logging.info("Desteklenen siteler formu açıldı.")
     
     def showIletisimForm(self):
         self.iletisimForm.show()
+        logging.info("İletisim formu açıldı.")
 
     def hideUrunGuncelleniyorForm(self):
         self.urunGuncelleniyorForm.hide()
+        logging.info("Ürün güncelleniyor formu kapatıldı.")
 
 
     def web_browser_start(self):
         selected = self.product_table_widget.currentRow()
         if not selected == -1:
             open(self.__productList[selected].get_link())
+            logging.info(f"Web tarayıcı açıldı. URL: {self.__productList[selected].get_link()}")
         else:
             MessageBox.getBasicMB(self,"Hata","Listeden kayıt seçin.")
 
@@ -148,6 +161,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_UrunlerWindow):
         self.product_table_widget.clear()
         self.__productList = self.databaseProduct.loadDB()
         print(f"{self.return_time()} | Product List güncellendi (SQL).")
+        logging.info(f"Product List güncellendi (SQL).")
 
     def notify_product_list_changed(self, control = False):
         if self.urunEkleForm.URUN_EKLENDI_MI:
@@ -179,7 +193,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_UrunlerWindow):
                     if (product.get_stok_takip() and product.get_fiyat_takip()): # stok ve fiyat takip ediliyorsa
                         #ikiside
                         print(f"{self.return_time()} | {product.get_isim()} güncelleniyor.")
-
+                        logging.info(f"{self.return_time()} | {product.get_isim()} güncelleniyor.")
                         #GÜNCELLEMESİ YAP
                         price = self.web_browser.getPriceFromProduct(product)
                         stock = self.web_browser.getStockFromProduct(product)
@@ -196,11 +210,11 @@ class MainWindow(QtWidgets.QMainWindow, Ui_UrunlerWindow):
                         
                         self.notify_product_list_changed(control=True)
                         print(f"{self.return_time()} | {product.get_isim()} güncellendi.")
-
+                        logging.info(f"{self.return_time()} | {product.get_isim()} güncellendi.")
                     elif (product.get_stok_takip()): # stok takip ediliyorsa
                         #sadece stok
                         print(f"{self.return_time()} | {product.get_isim()} (sadece stok) güncelleniyor.")
-
+                        logging.info(f"{self.return_time()} | {product.get_isim()} (sadece stok) güncelleniyor.")
                         #GÜNCELLEMESİ YAP
                         stock = self.web_browser.getStockFromProduct(product)
                         product.set_stok(stock)
@@ -212,12 +226,13 @@ class MainWindow(QtWidgets.QMainWindow, Ui_UrunlerWindow):
 
                         self.notify_product_list_changed(control=True)
                         print(f"{self.return_time()} | {product.get_isim()} güncellendi.")
+                        logging.info(f"{self.return_time()} | {product.get_isim()} güncellendi.")
 
                     elif (product.get_fiyat_takip()): # fiyat takip ediliyorsa
 
                         #sadece fiyat
                         print(f"{self.return_time()} | {product.get_isim()} (sadece fiyat) güncelleniyor.")
-                        
+                        logging.info(f"{self.return_time()} | {product.get_isim()} (sadece fiyat) güncelleniyor.")
                         #GÜNCELLEMESİ YAP
                         price = self.web_browser.getPriceFromProduct(product)
                         product.set_fiyat(price)
@@ -230,6 +245,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_UrunlerWindow):
 
                         self.notify_product_list_changed(control=True)
                         print(f"{self.return_time()} | {product.get_isim()} güncellendi.")
+                        logging.info(f"{self.return_time()} | {product.get_isim()} güncellendi.")
                     
                     QTest.qWait(100)
 
@@ -246,6 +262,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_UrunlerWindow):
                 myChart.create_plot()
             except Exc.MissingData:
                 MessageBox.getBasicMB(self, "Hata","Ürünün fiyat ve stok grafiği çizilemedi.")
+                logging.error(f"{clicked_product.get_isim()} fiyat ve stok grafiği çizilemedi.")
         else:
             self.urunDetayForm.show()
             self.urunDetayForm.setProduct(clicked_product)

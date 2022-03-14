@@ -2,24 +2,29 @@ from sys import argv
 from PyQt5 import QtWidgets
 from Python.UrunlerWindow import MainWindow
 from os import path, makedirs
+import logging
 
-folder_names = ["Profile","Databases","Driver"]
-def create_folder_if_not_exists(folder_names):
-    for folder_name in folder_names:
-        if not path.exists(folder_name):
-            if folder_name == "Driver":
-                pass #download driver
-            makedirs(folder_name)
+from Python.Business import Compatibility
+from datetime import datetime
 
+def get_time_log_config():
+    return datetime.now().strftime("%H_%M_%S_%d_%m_%Y")
 
+def set_logging():
+    logging.basicConfig(filename=fr'Log/log_{get_time_log_config()}.log', level=logging.DEBUG, format='%(asctime)s %(levelname)s %(message)s')
+    logging.info("Logging is set")
 
-
-def main():
-    create_folder_if_not_exists(folder_names)
-    app = QtWidgets.QApplication(argv)
-    window = MainWindow()
-    window.show()
-    app.exec()
+def main(): 
+    Compatibility.check_folder()
+    set_logging()
+    if Compatibility.check_compatibility():
+        app = QtWidgets.QApplication(argv)
+        window = MainWindow()
+        window.show()
+        app.exec()
+    else:
+        print("Your computer is not compatible with this program")
+        logging.error("Your computer is not compatible with this program")
 
 
 

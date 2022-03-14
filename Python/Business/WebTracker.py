@@ -29,7 +29,7 @@ class WebPrice:
     __chromeDriverPath = getcwd() +  fr"/Driver/chromedriver.exe"
     __is_start_browser = False  # browser başlatıldı mı?
     
-    def __init__(self, profileName="profile1"):
+    def __init__(self, profileName="profile1",chrome_driver_path = None):
 
         self.options = ChromeOptions()
         self.__profileName = profileName
@@ -42,6 +42,9 @@ class WebPrice:
             self.options.headless = True
         else:
             self.options.headless = False
+
+        if chrome_driver_path is not None:
+            self.__chromeDriverPath = chrome_driver_path
 
         self.__startBrowser()
 
@@ -58,7 +61,7 @@ class WebPrice:
         else:
             print("Chrome Driver not found.")
             self.__is_start_browser=False
-
+            exit()
     def getPage(self,URL : str):
         if self.browser.current_url == URL:
             pass
@@ -90,14 +93,19 @@ class WebPrice:
                     return 0.0
             elif product.get_domain() == SUPPORTEDWEBSITES[2]:
                 #TRENDYOL
-                self.getPage(product.get_link())
-                urunDiv = self.browser.find_element_by_css_selector("div[class='product-detail-container']")
-                urunFiyatDsc = urunDiv.find_element_by_css_selector("span[class='prc-dsc']").text
-                urunFiyatSlg = urunDiv.find_element_by_css_selector("span[class='prc-slg']").text
-                if urunFiyatDsc == "":
-                    return self.str_price_to_float(urunFiyatSlg)
-                else:
-                    return self.str_price_to_float(urunFiyatDsc)
+                #TODO FIX BUG
+                try:
+                    self.getPage(product.get_link())
+                    urunDiv = self.browser.find_element_by_css_selector("div[class='product-detail-container']")
+                    urunFiyatDsc = urunDiv.find_element_by_css_selector("span[class='prc-dsc']").text
+                    urunFiyatSlg = urunDiv.find_element_by_css_selector("span[class='prc-slg']").text
+                    if urunFiyatDsc == "":
+                        return self.str_price_to_float(urunFiyatSlg)
+                    else:
+                        return self.str_price_to_float(urunFiyatDsc)
+                except Exception as e:
+                    print(e)
+                    return 0.0
             elif product.get_domain() == SUPPORTEDWEBSITES[3]:
                 #HEPSİBURADA
                 self.getPage(product.get_link())
