@@ -6,7 +6,8 @@ import sqlite3 as sql # sqlite3 is a module
 #Models
 from Python.Model.Product import Product
 
-
+#logging
+import logging
 
 
 CREATETABLEPRODUCT = """CREATE TABLE IF NOT EXISTS products (id	INTEGER PRIMARY KEY,isim TEXT NOT NULL,link TEXT NOT NULL,check_time_sec INTEGER NOT NULL,fiyat_takip TEXT NOT NULL, stok_takip TEXT NOT NULL,fiyat INTEGER NOT NULL,stok TEXT NOT NULL,son_kontrol_zamani INTEGER NOT NULL, domain TEXT NOT NULL, birim TEXT)"""
@@ -101,11 +102,13 @@ class DatabaseProduct:
                 myProduct = Product(id,isim,link,check_time_sec,fiyat_takip,stok_takip,fiyat,stok,son_kontrol_zamani,domain,birim)
 
                 self.__products.append(myProduct)
+            logging.info("Load products from database is successfull")
             self.__isLoaded = True
         else:
             self.im.execute(CREATETABLEPRODUCT)
             self.db.commit()
             self.__isLoaded = True
+            logging.info("Create Database")
         self.db.close()
         return self.__products
 
@@ -118,6 +121,7 @@ class DatabaseProduct:
         self.db.close()
         self.__isLoaded = True
         self.__dbLen = 0
+        logging.info("Create Database")
 
     def getProductLenFromDB(self) -> int:
         """Database'de kayıtlı olan products listesinin uzunluğunu döner."""
@@ -137,6 +141,7 @@ class DatabaseProduct:
         self.im.execute(create_table_prices)
         self.db.commit()
         self.db.close()
+        logging.info(f"Create price list for product {product.get_name()}")
 
     def addProduct(self,product:Product):
         """Database'e ürün ekler."""
@@ -165,6 +170,7 @@ class DatabaseProduct:
 
         self.create_price_list_for_product(product)
         self.add_price_priceList(product)
+        logging.info(f"Add product {product.get_name()}")
 
         #create table for product prices
 

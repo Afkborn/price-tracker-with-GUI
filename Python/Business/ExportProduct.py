@@ -1,5 +1,6 @@
 
 #Model
+import logging
 from Python.Model.Product import Product
 
 
@@ -38,6 +39,7 @@ def get_gecmis_fiyatlar(product:Product):
     returnList = []
     for i in range(len(date)):
         returnList.append({"date":date[i],"price":price[i]})
+    logging.info(f"Return old price list. Product ID and name : {product.get_id()} {product.get_isim()}")
     return returnList
 
 def export_product_to_json(product:Product,location:str):
@@ -61,8 +63,10 @@ def export_product_to_json(product:Product,location:str):
         "gecmis_fiyatlar":gecmis_fiyatlar
     }
     jsonObject = json.dumps(product_json)
+
     with open(location, "w",encoding="utf-8") as outfile:
         outfile.write(jsonObject)
+        logging.info(f"{location} is exported. Product ID and name : {product.get_id()} {product.get_isim()}")
         return location
 
 
@@ -95,4 +99,5 @@ def export_all_products_to_json(location:str):
     jsonObject = json.dumps(jsonObjectList)
     with open(location, "w",encoding="utf-8") as outfile:
         outfile.write(jsonObject)
+        logging.info("All products are exported")
         return location

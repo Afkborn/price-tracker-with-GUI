@@ -1,5 +1,6 @@
 from Python.Model.Website import Website
 
+import logging
 
 SUPPORTEDWEBSITES = [
     Website("Samm Market", "market.samm.com","teknoloji",True,True),
@@ -16,6 +17,7 @@ def getSupportedWebsites() -> list:
     for i in SUPPORTEDWEBSITES:
         if i.get_tracking_support():
             returnList.append(i.get_domain())
+    logging.info("Supported Websites: " + str(returnList))
     return returnList
 
 
@@ -25,4 +27,5 @@ def getSupportedWebsitesForBruteForce() -> list:
     for i in SUPPORTEDWEBSITES:
         if i.get_brute_force_support():
             returnList.append(i.get_domain())
+    logging.info("Supported Websites for Brute Force: " + str(returnList))
     return returnList

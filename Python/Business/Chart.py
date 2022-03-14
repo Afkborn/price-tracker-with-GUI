@@ -1,6 +1,9 @@
 import matplotlib.pyplot as plt
 from datetime import datetime
 
+#logging
+import logging
+
 plt.rcParams['toolbar'] = 'None'
 plt.rcParams['axes.xmargin'] = 0
 
